@@ -24,6 +24,4 @@ Workflow Git :
 - Commit par fonctionnalité. Message : `Feature(menu): Créer un menu`
 - Push sur la branche correspondante puis déploiement depuis Render.
 
-Prochaines étapes suggérées :
-1. Confirmer que je crée le fichier `db/schema.sql` initial et `README.md`.
-2. Si oui, voulez-vous que je génère aussi les issues GitHub (liste des tâches), ou préférez créer vous-même les issues ?
+
