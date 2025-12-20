@@ -1,0 +1,39 @@
+@model BrasilBurger.Web.Models.ViewModels.CommandeViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Confirmation de la commande</h1>
+
+<div>
+    <h3>Récapitulatif</h3>
+    @if (Model.Panier == null || !Model.Panier.Items.Any())
+    {
+        <p>Panier vide.</p>
+    }
+    else
+    {
+        <ul>
+        @foreach (var it in Model.Panier.Items)
+        {
+            <li>@it.Nom x @it.Quantite — @it.SousTotal €</li>
+        }
+        </ul>
+        <p>Total : @Model.Panier.Total €</p>
+    }
+
+    <p>Type de livraison choisi: @Model.TypeLivraison</p>
+    <form method="post" asp-action="ValiderCommande">
+        <input type="hidden" name="TypeLivraison" value="@Model.TypeLivraison" />
+        <input type="hidden" name="ZoneId" value="@(Model.ZoneId?.ToString() ?? "")" />
+        <label>Méthode de paiement:
+            <select name="MethodePaiement">
+                <option value="wave">Wave</option>
+                <option value="om">OM</option>
+            </select>
+        </label>
+        <button type="submit">Payer et valider</button>
+    </form>
+
+    <a href="/Commande/Panier">Retour au panier</a>
+</div>

@@ -1,0 +1,51 @@
+@model BrasilBurger.Web.Models.ViewModels.PanierViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Panier</h1>
+
+@if (!Model.Items.Any())
+{
+    <p>Votre panier est vide.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr><th>Produit</th><th>Prix</th><th>Qté</th><th>Sous-total</th><th></th></tr>
+        </thead>
+        <tbody>
+        @for (int i = 0; i < Model.Items.Count; i++)
+        {
+            var it = Model.Items[i];
+            <tr>
+                <td>@it.Nom</td>
+                <td>@it.PrixUnitaire €</td>
+                <td>@it.Quantite</td>
+                <td>@it.SousTotal €</td>
+                <td>
+                    <form method="post" action="/Commande/SupprimerDuPanier">
+                        <input type="hidden" name="index" value="@i" />
+                        <button type="submit">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <p>Total: @Model.Total €</p>
+
+    <h3>Type de livraison</h3>
+    <form method="post" action="/Commande/ChoisirLivraison">
+        <input type="radio" name="typeLivraison" value="sur_place" @(Model.TypeLivraison=="sur_place"?"checked":"") /> Sur place
+        <input type="radio" name="typeLivraison" value="a_recuperer" @(Model.TypeLivraison=="a_recuperer"?"checked":"") /> A récupérer
+        <input type="radio" name="typeLivraison" value="livraison" @(Model.TypeLivraison=="livraison"?"checked":"") /> Livraison
+        <br />
+        <label>Zone (optionnel): <input type="number" name="zoneId" value="@(Model.ZoneId?.ToString() ?? "")" /></label>
+        <button type="submit">Choisir</button>
+    </form>
+
+    <a href="/Commande/Confirmation">Confirmer la commande</a>
+}

@@ -1,0 +1,21 @@
+@model BrasilBurger.Web.Models.ViewModels.DetailsMenuViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Détails du menu</h1>
+
+<div>
+    <h2>@Model.Menu.Nom</h2>
+    <img src="@(Model.Menu.Image ?? "/images/default-menu.png")" alt="@Model.Menu.Nom" style="height:120px;" />
+    <p>Contenu: @Model.Menu.Burger?.Nom — Boisson: @Model.Menu.Boisson?.Nom</p>
+    <p>Prix : @Model.Menu.Prix €</p>
+</div>
+
+<form method="post" action="/Commande/AjouterAuPanier">
+    <input type="hidden" name="type" value="menu" />
+    <input type="hidden" name="id" value="@Model.Menu.Id" />
+    <label>Quantité: <input type="number" name="quantite" value="1" min="1" /></label>
+    <button type="submit">Ajouter au panier</button>
+    <a href="/Catalogue">Retour</a>
+</form>
