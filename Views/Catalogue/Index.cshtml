@@ -1,0 +1,55 @@
+@model BrasilBurger.Web.Models.ViewModels.CatalogueViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Catalogue</h1>
+
+<div>
+    <strong>Filtrer :</strong>
+    <a href="?filtre=all">Tous</a> |
+    <a href="?filtre=burger">Burgers</a> |
+    <a href="?filtre=menu">Menus</a>
+</div>
+
+<form method="get" action="">
+    <input type="hidden" name="filtre" value="@Model.FiltreType?.ToString().ToLower()" />
+    <input type="text" name="search" value="@Model.SearchTerm" placeholder="Rechercher" />
+    <button type="submit">Rechercher</button>
+</form>
+
+<h2>Burgers</h2>
+@if (Model.Burgers?.Any() != true)
+{
+    <p>Aucun burger trouvé.</p>
+}
+else
+{
+    <ul>
+    @foreach (var b in Model.Burgers)
+    {
+        <li>
+            <img src="@(b.Image ?? "/images/default-burger.png")" alt="@b.Nom" style="height:60px;" />
+            <a href="/Catalogue/DetailsBurger/@b.Id">@b.Nom</a> — @b.Prix €
+        </li>
+    }
+    </ul>
+}
+
+<h2>Menus</h2>
+@if (Model.Menus?.Any() != true)
+{
+    <p>Aucun menu trouvé.</p>
+}
+else
+{
+    <ul>
+    @foreach (var m in Model.Menus)
+    {
+        <li>
+            <img src="@(m.Image ?? "/images/default-menu.png")" alt="@m.Nom" style="height:60px;" />
+            <a href="/Catalogue/DetailsMenu/@m.Id">@m.Nom</a> — @m.Prix €
+        </li>
+    }
+    </ul>
+}

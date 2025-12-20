@@ -1,0 +1,30 @@
+@model BrasilBurger.Web.Models.ViewModels.DetailsBurgerViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Détails du burger</h1>
+
+<div>
+    <h2>@Model.Burger.Nom</h2>
+    <img src="@(Model.Burger.Image ?? "/images/default-burger.png")" alt="@Model.Burger.Nom" style="height:120px;" />
+    <p>@Model.Burger.Description</p>
+    <p>Prix : @Model.Burger.Prix €</p>
+</div>
+
+<h3>Compléments proposés</h3>
+<form method="post" action="/Commande/AjouterAuPanier">
+    <input type="hidden" name="type" value="burger" />
+    <input type="hidden" name="id" value="@Model.Burger.Id" />
+    <div>
+    @foreach (var c in Model.ComplementsDisponibles)
+    {
+        <label>
+            <input type="checkbox" name="complementIds" value="@c.Id" /> @c.Nom (@c.Prix €)
+        </label><br />
+    }
+    </div>
+    <label>Quantité: <input type="number" name="quantite" value="1" min="1" /></label>
+    <button type="submit">Ajouter au panier</button>
+    <a href="/Catalogue">Retour</a>
+</form>
