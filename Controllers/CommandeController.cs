@@ -49,12 +49,7 @@ namespace BrasilBurger.Web.Controllers
                         var complement = await _catalogueService.GetComplementByIdAsync(compId);
                         if (complement != null)
                         {
-                            item.Complements.Add(new ComplementPanierViewModel
-                            {
-                                Id = complement.Id,
-                                Nom = complement.Nom,
-                                Prix = complement.Prix
-                            });
+                            item.Complements.Add(complement.Nom);
                         }
                     }
                 }
@@ -180,7 +175,8 @@ namespace BrasilBurger.Web.Controllers
             var viewModel = new CommandeViewModel
             {
                 Panier = panier,
-                TypeLivraison = panier.TypeLivraison
+                TypeLivraison = panier.TypeLivraison,
+                ZoneId = panier.ZoneId
             };
 
             return View(viewModel);

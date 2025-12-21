@@ -1,32 +1,88 @@
 @model BrasilBurger.Web.Models.ViewModels.SuiviCommandeViewModel
 @{
+    ViewData["Title"] = "Mes Commandes";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Mes commandes</h1>
+<div class="container mt-4">
+    <h2 class="mb-4"><i class="fas fa-list-alt"></i> Mes Commandes</h2>
 
-<div>
-    <strong>Filtrer par état :</strong>
-    <a href="?filtre=all">Tous</a> |
-    <a href="?filtre=en_attente">En attente</a> |
-    <a href="?filtre=validee">Validées</a> |
-    <a href="?filtre=en_preparation">En préparation</a> |
-    <a href="?filtre=terminee">Terminées</a> |
-    <a href="?filtre=annulee">Annulées</a>
+    <!-- Filtres -->
+    <div class="mb-4">
+        <div class="btn-group" role="group">
+            <a href="?filtre=all" class="btn @(string.IsNullOrEmpty(Model.FiltreEtat) || Model.FiltreEtat == "all" ? "btn-primary" : "btn-outline-primary")">
+                Toutes
+            </a>
+            <a href="?filtre=validee" class="btn @(Model.FiltreEtat == "validee" ? "btn-primary" : "btn-outline-primary")">
+                Validées
+            </a>
+            <a href="?filtre=en_preparation" class="btn @(Model.FiltreEtat == "en_preparation" ? "btn-primary" : "btn-outline-primary")">
+                En préparation
+            </a>
+            <a href="?filtre=prete" class="btn @(Model.FiltreEtat == "prete" ? "btn-primary" : "btn-outline-primary")">
+                Prête
+            </a>
+            <a href="?filtre=livree" class="btn @(Model.FiltreEtat == "livree" ? "btn-primary" : "btn-outline-primary")">
+                Livrées
+            </a>
+        </div>
+    </div>
+
+    @if (!Model.Commandes?.Any() == true)
+    {
+        <div class="alert alert-info text-center py-5">
+            <i class="fas fa-receipt fa-3x mb-3 text-muted"></i>
+            <h4>Aucune commande trouvée</h4>
+            <p class="text-muted">Vous n'avez pas encore passé de commande</p>
+            <a href="/Catalogue" class="btn btn-primary mt-3">
+                <i class="fas fa-utensils"></i> Commander maintenant
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var commande in Model.Commandes)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><strong>Commande #@commande.Numero</strong></span>
+                            <span class="badge @(commande.Etat switch {
+                                "validee" => "badge-info",
+                                "en_preparation" => "badge-warning",
+                                "prete" => "badge-success",
+                                "livree" => "badge-secondary",
+                                _ => "badge-light"
+                            })">
+                                @commande.Etat?.Replace("_", " ").ToUpper()
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-2">
+                                <i class="fas fa-calendar"></i> 
+                                <small>@commande.DateCommande.ToString("dd/MM/yyyy HH:mm")</small>
+                            </p>
+                            <p class="mb-2">
+                                <i class="fas fa-truck"></i> 
+                                <small>@(commande.TypeLivraison?.Replace("_", " ") ?? "Non spécifié")</small>
+                            </p>
+                            <p class="mb-3">
+                                <i class="fas fa-shopping-bag"></i> 
+                                <small>@commande.LignesCommande?.Count() produit(s)</small>
+                            </p>
+                            <hr>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 style="color: var(--primary-orange);">@commande.MontantTotal.ToString("N0") FCFA</h4>
+                                <a href="/Suivi/Details/@commande.Id" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-eye"></i> Détails
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </div>
 
-@if (!Model.Commandes.Any())
-{
-    <p>Aucune commande trouvée.</p>
-}
-else
-{
-    <ul>
-    @foreach (var c in Model.Commandes)
-    {
-        <li>
-            <a href="/Suivi/Details/@c.Id">@c.Numero</a> — @c.DateCommande.ToString("dd/MM/yyyy HH:mm") — @c.Etat — @c.MontantTotal €
-        </li>
-    }
-    </ul>
-}

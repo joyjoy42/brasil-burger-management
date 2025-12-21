@@ -1,51 +1,152 @@
 @model BrasilBurger.Web.Models.ViewModels.PanierViewModel
 @{
+    ViewData["Title"] = "Mon Panier";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Panier</h1>
+<div class="container mt-4">
+    <h2 class="mb-4"><i class="fas fa-shopping-cart"></i> Mon Panier</h2>
 
-@if (!Model.Items.Any())
-{
-    <p>Votre panier est vide.</p>
-}
-else
-{
-    <table>
-        <thead>
-            <tr><th>Produit</th><th>Prix</th><th>Qté</th><th>Sous-total</th><th></th></tr>
-        </thead>
-        <tbody>
-        @for (int i = 0; i < Model.Items.Count; i++)
-        {
-            var it = Model.Items[i];
-            <tr>
-                <td>@it.Nom</td>
-                <td>@it.PrixUnitaire €</td>
-                <td>@it.Quantite</td>
-                <td>@it.SousTotal €</td>
-                <td>
-                    <form method="post" action="/Commande/SupprimerDuPanier">
-                        <input type="hidden" name="index" value="@i" />
-                        <button type="submit">Supprimer</button>
-                    </form>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+    @if (!Model.Items.Any())
+    {
+        <div class="alert alert-info text-center py-5">
+            <i class="fas fa-shopping-cart fa-3x mb-3 text-muted"></i>
+            <h4>Votre panier est vide</h4>
+            <p class="text-muted">Ajoutez des produits depuis le catalogue</p>
+            <a href="/Catalogue" class="btn btn-primary mt-3">
+                <i class="fas fa-utensils"></i> Voir le Catalogue
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        @for (int i = 0; i < Model.Items.Count; i++)
+                        {
+                            var item = Model.Items[i];
+                            <div class="cart-item @(i < Model.Items.Count - 1 ? "border-bottom" : "") pb-3 mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-md-6">
+                                        <h5 class="mb-1">@item.Nom</h5>
+                                        <p class="text-muted mb-2">
+                                            <small>@item.Type.ToUpper()</small>
+                                        </p>
+                                        @if (item.Complements.Any())
+                                        {
+                                            <p class="text-muted mb-0">
+                                                <small><i class="fas fa-plus-circle"></i> @string.Join(", ", item.Complements)</small>
+                                            </p>
+                                        }
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <span class="food-card-price">@item.PrixUnitaire.ToString("N0") FCFA</span>
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <form method="post" action="/Commande/ModifierQuantite" class="d-inline">
+                                            <input type="hidden" name="index" value="@i" />
+                                            <div class="input-group input-group-sm">
+                                                <input type="number" name="quantite" value="@item.Quantite" min="1" class="form-control" onchange="this.form.submit()" style="max-width: 70px;">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-md-2 text-right">
+                                        <div>
+                                            <strong style="color: var(--primary-orange);">@item.SousTotal.ToString("N0") FCFA</strong>
+                                        </div>
+                                        <form method="post" action="/Commande/SupprimerDuPanier" class="d-inline">
+                                            <input type="hidden" name="index" value="@i" />
+                                            <button type="submit" class="btn btn-sm btn-link text-danger">
+                                                <i class="fas fa-trash"></i> Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
 
-    <p>Total: @Model.Total €</p>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="mb-3">Type de livraison</h5>
+                        <form method="post" action="/Commande/ChoisirLivraison">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="typeLivraison" value="sur_place" id="surPlace" @(Model.TypeLivraison=="sur_place"?"checked":"")>
+                                <label class="form-check-label" for="surPlace">
+                                    <i class="fas fa-utensils"></i> Sur place
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="typeLivraison" value="a_recuperer" id="aRecuperer" @(Model.TypeLivraison=="a_recuperer"?"checked":"")>
+                                <label class="form-check-label" for="aRecuperer">
+                                    <i class="fas fa-shopping-bag"></i> À récupérer
+                                </label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="typeLivraison" value="livraison" id="livraison" @(Model.TypeLivraison=="livraison"?"checked":"")>
+                                <label class="form-check-label" for="livraison">
+                                    <i class="fas fa-truck"></i> Livraison à domicile
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>Zone (optionnel):</label>
+                                <input type="number" name="zoneId" value="@(Model.ZoneId?.ToString() ?? "")" class="form-control" placeholder="Numéro de zone">
+                            </div>
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="fas fa-check"></i> Valider le type de livraison
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
-    <h3>Type de livraison</h3>
-    <form method="post" action="/Commande/ChoisirLivraison">
-        <input type="radio" name="typeLivraison" value="sur_place" @(Model.TypeLivraison=="sur_place"?"checked":"") /> Sur place
-        <input type="radio" name="typeLivraison" value="a_recuperer" @(Model.TypeLivraison=="a_recuperer"?"checked":"") /> A récupérer
-        <input type="radio" name="typeLivraison" value="livraison" @(Model.TypeLivraison=="livraison"?"checked":"") /> Livraison
-        <br />
-        <label>Zone (optionnel): <input type="number" name="zoneId" value="@(Model.ZoneId?.ToString() ?? "")" /></label>
-        <button type="submit">Choisir</button>
-    </form>
+            <div class="col-lg-4">
+                <div class="card sticky-top" style="top: 20px;">
+                    <div class="card-body">
+                        <h5 class="mb-3">Récapitulatif</h5>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Sous-total</span>
+                            <strong>@Model.Total.ToString("N0") FCFA</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Livraison</span>
+                            <strong class="text-success">Gratuit</strong>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <h5>Total</h5>
+                            <h4 style="color: var(--primary-orange);">@Model.Total.ToString("N0") FCFA</h4>
+                        </div>
+                        <a href="/Commande/Confirmation" class="btn btn-primary btn-block btn-lg">
+                            <i class="fas fa-check-circle"></i> Confirmer la commande
+                        </a>
+                        <a href="/Catalogue" class="btn btn-outline-primary btn-block mt-2">
+                            <i class="fas fa-arrow-left"></i> Continuer mes achats
+                        </a>
+                        <form method="post" action="/Commande/ViderPanier" class="mt-3">
+                            <button type="submit" class="btn btn-sm btn-outline-danger btn-block" onclick="return confirm('Voulez-vous vraiment vider le panier ?')">
+                                <i class="fas fa-trash"></i> Vider le panier
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
 
-    <a href="/Commande/Confirmation">Confirmer la commande</a>
-}
+<style>
+    .cart-item:hover {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+    }
+    
+    .sticky-top {
+        position: sticky;
+    }
+</style>
+

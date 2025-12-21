@@ -1,0 +1,106 @@
+// EXEMPLE : Program.cs avec Cloudinary
+// Copiez ce code pour remplacer la section seed dans votre Program.cs
+
+using BrasilBurger.Web.Helpers;
+
+// ... (votre code existant)
+
+// Après la création du builder, initialisez CloudinaryHelper
+var cloudinaryCloudName = builder.Configuration["Cloudinary:CloudName"];
+if (!string.IsNullOrEmpty(cloudinaryCloudName))
+{
+    CloudinaryHelper.Initialize(cloudinaryCloudName);
+}
+
+// ... (votre code existant jusqu'au seed)
+
+// Dans la section seed, remplacez les chemins d'images :
+
+// AVANT (images locales):
+// new Burger { Nom = "Burger Classique", Image = "/images/burger-classique.jpg" }
+
+// APRÈS (images Cloudinary):
+var burgers = new[]
+{
+    new Burger { 
+        Nom = "Burger Classique", 
+        Description = "Steak, salade, tomate, sauce", 
+        Prix = 2500m, 
+        Image = CloudinaryHelper.GetImageUrl("burger-classique.jpg") 
+    },
+    new Burger { 
+        Nom = "Cheeseburger", 
+        Description = "Burger classique avec fromage", 
+        Prix = 2800m, 
+        Image = CloudinaryHelper.GetImageUrl("cheeseburger.jpg") 
+    },
+    new Burger { 
+        Nom = "Burger Poulet Croustillant", 
+        Description = "Poulet frit croustillant", 
+        Prix = 2700m, 
+        Image = CloudinaryHelper.GetImageUrl("burger-classique.jpg") 
+    },
+    // ... etc
+};
+
+// OU si vous préférez utiliser directement les URLs :
+var cloudName = "VOTRE_CLOUD_NAME"; // Remplacez par votre cloud name
+var baseUrl = $"https://res.cloudinary.com/{cloudName}/image/upload/brasil-burger";
+
+var burgers = new[]
+{
+    new Burger { 
+        Nom = "Burger Classique", 
+        Description = "Steak, salade, tomate, sauce", 
+        Prix = 2500m, 
+        Image = $"{baseUrl}/burger-classique.jpg" 
+    },
+    new Burger { 
+        Nom = "Cheeseburger", 
+        Description = "Burger classique avec fromage", 
+        Prix = 2800m, 
+        Image = $"{baseUrl}/cheeseburger.jpg" 
+    },
+    // ... etc
+};
+
+// Pour les compléments :
+var complements = new[]
+{
+    new Complement { 
+        Nom = "Frites Classiques", 
+        Type = "frite", 
+        Prix = 1000m, 
+        Image = CloudinaryHelper.GetImageUrl("nuggets.png") 
+    },
+    new Complement { 
+        Nom = "Jus Bissap", 
+        Type = "boisson", 
+        Prix = 1000m, 
+        Image = CloudinaryHelper.GetImageUrl("jus-bissap.png") 
+    },
+    // ... etc
+};
+
+// Pour les menus :
+var menus = new[]
+{
+    new Menu { 
+        Nom = "Menu Étudiant", 
+        Description = "Burger + frites + boisson", 
+        Prix = 4500m, 
+        Image = CloudinaryHelper.GetImageUrl("menu-etudiant.png") 
+    },
+    new Menu { 
+        Nom = "Menu Poulet", 
+        Description = "Poulet frit + frites + boisson", 
+        Prix = 5000m, 
+        Image = CloudinaryHelper.GetImageUrl("menu-poulet.png") 
+    },
+    // ... etc
+};
+
+// ASTUCE : Si vous voulez des versions optimisées pour les cartes :
+// Image = CloudinaryHelper.Transformations.Card("burger-classique.jpg")
+// Cela générera une URL avec redimensionnement automatique (300x200)
+

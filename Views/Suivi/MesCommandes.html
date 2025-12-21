@@ -1,0 +1,32 @@
+@model BrasilBurger.Web.Models.ViewModels.SuiviCommandeViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Mes commandes</h1>
+
+<div>
+    <strong>Filtrer par état :</strong>
+    <a href="?filtre=all">Tous</a> |
+    <a href="?filtre=en_attente">En attente</a> |
+    <a href="?filtre=validee">Validées</a> |
+    <a href="?filtre=en_preparation">En préparation</a> |
+    <a href="?filtre=terminee">Terminées</a> |
+    <a href="?filtre=annulee">Annulées</a>
+</div>
+
+@if (!Model.Commandes.Any())
+{
+    <p>Aucune commande trouvée.</p>
+}
+else
+{
+    <ul>
+    @foreach (var c in Model.Commandes)
+    {
+        <li>
+            <a href="/Suivi/Details/@c.Id">@c.Numero</a> — @c.DateCommande.ToString("dd/MM/yyyy HH:mm") — @c.Etat — @c.MontantTotal €
+        </li>
+    }
+    </ul>
+}

@@ -1,55 +1,145 @@
 @model BrasilBurger.Web.Models.ViewModels.CatalogueViewModel
+@using BrasilBurger.Web.Models.ViewModels
 @{
+    ViewData["Title"] = "Catalogue";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Catalogue</h1>
+<div class="container mt-4">
+    <!-- Search Bar -->
+    <div class="search-bar mb-4">
+        <form method="get" action="" class="d-flex align-items-center">
+            <i class="fas fa-search"></i>
+            <input type="text" name="search" value="@Model.SearchTerm" placeholder="Search dishes, restaurants" class="flex-grow-1" />
+            <input type="hidden" name="filtre" value="@Model.FiltreType?.ToString().ToLower()" />
+        </form>
+    </div>
 
-<div>
-    <strong>Filtrer :</strong>
-    <a href="?filtre=all">Tous</a> |
-    <a href="?filtre=burger">Burgers</a> |
-    <a href="?filtre=menu">Menus</a>
+    <!-- Filter Buttons -->
+    <div class="mb-4">
+        <div class="btn-group" role="group">
+            <a href="?filtre=all" class="btn @(Model.FiltreType == FilterType.All || Model.FiltreType == null ? "btn-primary" : "btn-outline-primary")">Tous</a>
+            <a href="?filtre=burger" class="btn @(Model.FiltreType == FilterType.Burger ? "btn-primary" : "btn-outline-primary")">Burgers</a>
+            <a href="?filtre=menu" class="btn @(Model.FiltreType == FilterType.Menu ? "btn-primary" : "btn-outline-primary")">Menus</a>
+        </div>
+    </div>
+
+    <!-- Category Section -->
+    <div class="category-section">
+        <div class="section-title">
+            <h3>Menu</h3>
+            <a href="#"><small>See All ></small></a>
+        </div>
+        <div class="category-list">
+            <div class="category-item @(Model.FiltreType == FilterType.All || Model.FiltreType == null ? "active" : "")">
+                <img src="https://res.cloudinary.com/dbkji1d1j/image/upload/brasil-burger/category-all.png" alt="All" onerror="this.src='https://via.placeholder.com/80?text=All'" />
+                <span>Tous</span>
+            </div>
+            <div class="category-item @(Model.FiltreType == FilterType.Burger ? "active" : "")">
+                <img src="https://res.cloudinary.com/dbkji1d1j/image/upload/brasil-burger/category-burger.png" alt="Burgers" onerror="this.src='https://via.placeholder.com/80?text=Burger'" />
+                <span>Burgers</span>
+            </div>
+            <div class="category-item @(Model.FiltreType == FilterType.Menu ? "active" : "")">
+                <img src="https://res.cloudinary.com/dbkji1d1j/image/upload/brasil-burger/category-menu.png" alt="Menus" onerror="this.src='https://via.placeholder.com/80?text=Menu'" />
+                <span>Menus</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Our Best Sellers / Products -->
+    <div class="section-title mt-5">
+        <h3>Our Best Sellers</h3>
+        <a href="#"><small>See All ></small></a>
+    </div>
+
+    <!-- Burgers -->
+    @if (Model.FiltreType == FilterType.All || Model.FiltreType == FilterType.Burger || Model.FiltreType == null)
+    {
+        @if (Model.Burgers?.Any() == true)
+        {
+            <div class="product-grid">
+                @foreach (var burger in Model.Burgers)
+                {
+                    <div class="food-card">
+                        <a href="/Catalogue/DetailsBurger/@burger.Id" style="text-decoration: none; color: inherit;">
+                            <img src="@(burger.Image ?? "/images/default-burger.png")" alt="@burger.Nom" onerror="this.src='https://via.placeholder.com/300x200?text=@burger.Nom'" />
+                            <div class="food-card-body">
+                                <h5 class="food-card-title">@burger.Nom</h5>
+                                <p class="text-muted mb-2" style="font-size: 0.9rem;">@(burger.Description ?? "Burger délicieux")</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="food-card-price">@burger.Prix.ToString("N0") FCFA</span>
+                                    <span class="badge badge-warning">
+                                        <i class="fas fa-star"></i> 4.7
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(Model.SearchTerm))
+        {
+            <p class="text-center text-muted py-5">Aucun burger trouvé pour "@Model.SearchTerm".</p>
+        }
+    }
+
+    <!-- Menus -->
+    @if (Model.FiltreType == FilterType.All || Model.FiltreType == FilterType.Menu || Model.FiltreType == null)
+    {
+        @if (Model.Menus?.Any() == true)
+        {
+            <div class="product-grid">
+                @foreach (var menu in Model.Menus)
+                {
+                    <div class="food-card">
+                        <a href="/Catalogue/DetailsMenu/@menu.Id" style="text-decoration: none; color: inherit;">
+                            <img src="@(menu.Image ?? "/images/default-menu.png")" alt="@menu.Nom" onerror="this.src='https://via.placeholder.com/300x200?text=@menu.Nom'" />
+                            <div class="food-card-body">
+                                <h5 class="food-card-title">@menu.Nom</h5>
+                                <p class="text-muted mb-2" style="font-size: 0.9rem;">@(menu.Description ?? "Menu complet")</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="food-card-price">@menu.Prix.ToString("N0") FCFA</span>
+                                    <span class="badge badge-warning">
+                                        <i class="fas fa-star"></i> 4.8
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(Model.SearchTerm))
+        {
+            <p class="text-center text-muted py-5">Aucun menu trouvé pour "@Model.SearchTerm".</p>
+        }
+    }
+
+    @if ((Model.Burgers?.Any() != true && Model.Menus?.Any() != true) && string.IsNullOrEmpty(Model.SearchTerm))
+    {
+        <p class="text-center text-muted py-5">Aucun produit disponible pour le moment.</p>
+    }
 </div>
 
-<form method="get" action="">
-    <input type="hidden" name="filtre" value="@Model.FiltreType?.ToString().ToLower()" />
-    <input type="text" name="search" value="@Model.SearchTerm" placeholder="Rechercher" />
-    <button type="submit">Rechercher</button>
-</form>
+@section Scripts {
+    <script>
+        // Auto-submit search on enter
+        document.querySelector('.search-bar input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                this.closest('form').submit();
+            }
+        });
 
-<h2>Burgers</h2>
-@if (Model.Burgers?.Any() != true)
-{
-    <p>Aucun burger trouvé.</p>
-}
-else
-{
-    <ul>
-    @foreach (var b in Model.Burgers)
-    {
-        <li>
-            <img src="@(b.Image ?? "/images/default-burger.png")" alt="@b.Nom" style="height:60px;" />
-            <a href="/Catalogue/DetailsBurger/@b.Id">@b.Nom</a> — @b.Prix €
-        </li>
-    }
-    </ul>
-}
-
-<h2>Menus</h2>
-@if (Model.Menus?.Any() != true)
-{
-    <p>Aucun menu trouvé.</p>
-}
-else
-{
-    <ul>
-    @foreach (var m in Model.Menus)
-    {
-        <li>
-            <img src="@(m.Image ?? "/images/default-menu.png")" alt="@m.Nom" style="height:60px;" />
-            <a href="/Catalogue/DetailsMenu/@m.Id">@m.Nom</a> — @m.Prix €
-        </li>
-    }
-    </ul>
+        // Category click handler
+        document.querySelectorAll('.category-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const text = this.querySelector('span').textContent.trim().toLowerCase();
+                let filter = 'all';
+                if (text === 'burgers') filter = 'burger';
+                if (text === 'menus') filter = 'menu';
+                window.location.href = '?filtre=' + filter;
+            });
+        });
+    </script>
 }
