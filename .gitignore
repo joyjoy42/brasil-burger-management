@@ -39,3 +39,5 @@ node_modules/
 *.publish
 *.zip
 
+# Render (optionnel - si vous voulez protéger render.yaml avec identifiants)
+# render.yaml

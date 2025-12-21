@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: brasil-burger-csharp
+    env: dotnet
+    region: oregon
+    plan: free
+    buildCommand: dotnet restore && dotnet publish -c Release -o ./publish
+    startCommand: dotnet ./publish/BrasilBurger.Web.dll
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://0.0.0.0:10000
+      - key: ConnectionStrings__DefaultConnection
+        value: Host=ep-withered-surf-a4zfsqbd-pooler.us-east-1.aws.neon.tech;Database=neondb;Username=neondb_owner;Password=npg_Q28lkcThzxRG;SSL Mode=Require;Trust Server Certificate=true
+      - key: Cloudinary__CloudName
+        value: dbkji1d1j
+      - key: Cloudinary__ApiKey
+        value: 166294258315442
+      - key: Cloudinary__ApiSecret
+        value: 9bpSi55tkiP5IZnwNpHrMuw-Qsc
+    healthCheckPath: /
+
