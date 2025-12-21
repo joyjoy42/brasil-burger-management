@@ -13,12 +13,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Configuration
 builder.Services.AddControllersWithViews();
 
-// DbContext
+// DbContext - PostgreSQL (Neon)
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (!string.IsNullOrEmpty(connectionString))
 {
     builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlite(connectionString));
+    {
+        options.UseNpgsql(connectionString);
+        // PostgreSQL requires UTC timestamps
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+    });
 }
 
 // Authentication - cookies
