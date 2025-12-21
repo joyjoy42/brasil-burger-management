@@ -1,0 +1,154 @@
+@model BrasilBurger.Web.Models.Entities.Commande
+@{
+    ViewData["Title"] = "Détails de la commande";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col-12">
+            <a href="/Suivi/MesCommandes" class="btn btn-link">
+                <i class="fas fa-arrow-left"></i> Retour à mes commandes
+            </a>
+        </div>
+    </div>
+
+    <h2 class="mb-4"><i class="fas fa-receipt"></i> Commande #@Model.Numero</h2>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Statut de la commande -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="mb-3">Statut de la commande</h5>
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="badge @(Model.Etat switch {
+                            "validee" => "badge-info",
+                            "en_preparation" => "badge-warning",
+                            "prete" => "badge-success",
+                            "livree" => "badge-secondary",
+                            _ => "badge-light"
+                        }) badge-lg" style="font-size: 1.1rem; padding: 10px 20px;">
+                            @Model.Etat?.Replace("_", " ").ToUpper()
+                        </span>
+                        <span class="ml-3 text-muted">
+                            <i class="fas fa-calendar"></i> @Model.DateCommande.ToString("dd/MM/yyyy à HH:mm")
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Articles commandés -->
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-shopping-bag"></i> Articles commandés</h5>
+                </div>
+                <div class="card-body">
+                    @foreach (var ligne in Model.LignesCommande)
+                    {
+                        <div class="row mb-3 pb-3 border-bottom">
+                            <div class="col-md-6">
+                                <h6 class="mb-1">@ligne.TypeProduit (#@ligne.ProduitId)</h6>
+                                @if (!string.IsNullOrEmpty(ligne.Complements))
+                                {
+                                    <p class="text-muted mb-0">
+                                        <small><i class="fas fa-plus-circle"></i> Compléments</small>
+                                    </p>
+                                }
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <span>@ligne.PrixUnitaire.ToString("N0") FCFA</span>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <span>x @ligne.Quantite</span>
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <strong style="color: var(--primary-orange);">@((ligne.PrixUnitaire * ligne.Quantite).ToString("N0")) FCFA</strong>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Informations de livraison -->
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-truck"></i> Livraison</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">
+                        <strong>Type:</strong> 
+                        @switch (Model.TypeLivraison)
+                        {
+                            case "sur_place":
+                                <span><i class="fas fa-utensils"></i> Sur place</span>
+                                break;
+                            case "a_recuperer":
+                                <span><i class="fas fa-shopping-bag"></i> À récupérer</span>
+                                break;
+                            case "livraison":
+                                <span><i class="fas fa-truck"></i> Livraison à domicile</span>
+                                break;
+                            default:
+                                <span>@Model.TypeLivraison</span>
+                                break;
+                        }
+                    </p>
+                    @if (Model.ZoneId.HasValue)
+                    {
+                        <p class="mb-0"><strong>Zone:</strong> @Model.ZoneId</p>
+                    }
+                </div>
+            </div>
+
+            <!-- Paiement -->
+            @if (Model.Paiement != null)
+            {
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="fas fa-credit-card"></i> Paiement</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2"><strong>Méthode:</strong> @Model.Paiement.Methode.ToUpper()</p>
+                        <p class="mb-2"><strong>Statut:</strong> 
+                            <span class="badge badge-success">@Model.Paiement.Statut.ToUpper()</span>
+                        </p>
+                        @if (!string.IsNullOrEmpty(Model.Paiement.Reference))
+                        {
+                            <p class="mb-0"><strong>Référence:</strong> <code>@Model.Paiement.Reference</code></p>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <h5 class="mb-3">Récapitulatif</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Sous-total</span>
+                        <strong>@Model.MontantTotal.ToString("N0") FCFA</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Livraison</span>
+                        <strong class="text-success">Gratuit</strong>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4">
+                        <h5>Total</h5>
+                        <h4 style="color: var(--primary-orange);">@Model.MontantTotal.ToString("N0") FCFA</h4>
+                    </div>
+
+                    <div class="alert alert-info mb-0">
+                        <small>
+                            <i class="fas fa-info-circle"></i> 
+                            Besoin d'aide ? Contactez-nous au +221 XX XXX XX XX
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

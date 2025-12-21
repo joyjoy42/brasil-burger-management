@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🍔 Brasil Burger Management System
 
 **Projet L3 ISM – Semestre 1**  
@@ -148,7 +149,6 @@ export DB_PASSWORD="npg_Q28lkcThzxRG"
   }
 }
 ```
-
 #### Configuration pour C#
 
 Éditez `appsettings.json` :

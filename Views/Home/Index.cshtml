@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = "Accueil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/home.css" />
+
+<div class="splash-screen">
+    <div class="logo-container">
+        <img src="https://res.cloudinary.com/dbkji1d1j/image/upload/brasil-burger/logo.jpg" alt="Brasil Burger Logo" onerror="this.style.display='none'; document.querySelector('.logo-text').style.display='block';">
+        <div class="logo-text" style="display: none;">BRAZIL BURGER</div>
+    </div>
+
+    <div class="welcome-section">
+        <h2>Bienvenue chez Brasil Burger</h2>
+        <p>
+            Découvrez nos burgers gourmands, préparés avec des ingrédients frais et de qualité. 
+            Commandez en ligne et profitez d'une livraison rapide ou venez les déguster sur place !
+        </p>
+
+        <div class="action-buttons">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="/Catalogue" class="btn btn-home btn-home-primary">
+                    <i class="fas fa-utensils"></i> Voir le Catalogue
+                </a>
+                <a href="/Commande/Panier" class="btn btn-home btn-home-outline">
+                    <i class="fas fa-shopping-cart"></i> Mon Panier
+                </a>
+            }
+            else
+            {
+                <a href="/Catalogue" class="btn btn-home btn-home-primary">
+                    <i class="fas fa-utensils"></i> Voir le Catalogue
+                </a>
+                <a href="/Account/Login" class="btn btn-home btn-home-outline">
+                    <i class="fas fa-sign-in-alt"></i> Se Connecter
+                </a>
+                <a href="/Account/Register" class="btn btn-home btn-home-outline">
+                    <i class="fas fa-user-plus"></i> S'inscrire
+                </a>
+            }
+        </div>
+    </div>
+</div>

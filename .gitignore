@@ -1,7 +1,11 @@
 # Fichiers de configuration avec identifiants sensibles
 appsettings.json
+appsettings.*.json
+!appsettings.Example.json
+appsettings.LOCAL.json
 **/database.properties
 IDENTIFIANTS.md
+cloudinary_mappings.json
 
 # Fichiers de build
 bin/
@@ -12,18 +16,29 @@ out/
 
 # Bases de données locales
 *.db
+*.db-shm
+*.db-wal
 *.sqlite
 *.sqlite3
 
 # Fichiers de logs
 *.log
 logs/
+[Ll]og/
+[Ll]ogs/
 
 # Fichiers temporaires
 *.tmp
 *.temp
+*.tmp_proj
+*_wpftmp.csproj
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.AppleDouble
+.LSOverride
 
 # IDE
 .vs/
@@ -31,9 +46,70 @@ Thumbs.db
 *.swp
 *.swo
 *~
+*.*~
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio cache/options directory
+.vs/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Files built by Visual Studio
+*_i.c
+*_p.c
+*_h.h
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+*.tlog
 
 # Node modules (si utilisé)
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
 
 # Fichiers de déploiement
 *.publish

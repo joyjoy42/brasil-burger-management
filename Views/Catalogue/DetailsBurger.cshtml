@@ -1,0 +1,182 @@
+@model BrasilBurger.Web.Models.ViewModels.DetailsBurgerViewModel
+@{
+    ViewData["Title"] = Model.Burger.Nom;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <a href="/Catalogue" class="btn btn-link">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+            <button class="btn btn-link float-right">
+                <i class="far fa-heart"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Product Image -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <img src="@(Model.Burger.Image ?? "/images/default-burger.png")" 
+                 alt="@Model.Burger.Nom" 
+                 class="img-fluid rounded"
+                 style="width: 100%; max-height: 400px; object-fit: cover;"
+                 onerror="this.src='https://via.placeholder.com/800x400?text=@Model.Burger.Nom'" />
+        </div>
+    </div>
+
+    <!-- Product Info -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="mb-2">@Model.Burger.Nom</h1>
+            <p class="text-muted mb-3">
+                <i class="fas fa-map-marker-alt"></i> Brasil Burger Restaurant
+            </p>
+            <div class="d-flex align-items-center mb-3">
+                <span class="badge badge-warning mr-3">
+                    <i class="fas fa-star"></i> 4.7
+                </span>
+                <span class="text-muted mr-3">
+                    <i class="fas fa-truck"></i> Livraison gratuite
+                </span>
+                <span class="text-muted">
+                    <i class="fas fa-clock"></i> 20 min
+                </span>
+            </div>
+            <p class="mb-4">@(Model.Burger.Description ?? "Burger délicieux préparé avec des ingrédients frais et de qualité supérieure. Un choix parfait pour satisfaire votre appétit.")</p>
+        </div>
+    </div>
+
+    <!-- Size Options (if applicable) -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5 class="mb-3">TAILLE</h5>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary size-btn" data-size="small">Petit</button>
+                <button type="button" class="btn btn-primary size-btn active" data-size="medium">Moyen</button>
+                <button type="button" class="btn btn-outline-primary size-btn" data-size="large">Grand</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ingredients/Complements -->
+    @if (Model.ComplementsDisponibles?.Any() == true)
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <h5 class="mb-3">INGRÉDIENTS / COMPLÉMENTS</h5>
+                <form id="complementsForm">
+                    <div class="row">
+                        @foreach (var complement in Model.ComplementsDisponibles)
+                        {
+                            <div class="col-6 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body p-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="complementIds" value="@complement.Id" id="comp_@complement.Id">
+                                            <label class="form-check-label" for="comp_@complement.Id" style="cursor: pointer;">
+                                                <small>@complement.Nom</small><br>
+                                                <strong style="color: var(--primary-orange);">+@complement.Prix.ToString("N0") FCFA</strong>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+
+    <!-- Price and Quantity -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 style="color: var(--primary-orange); font-weight: bold;" class="mb-0">@Model.Burger.Prix.ToString("N0") FCFA</h3>
+                </div>
+                <div class="quantity-selector">
+                    <button type="button" class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                    <span id="quantity">1</span>
+                    <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add to Cart Button -->
+    <div class="row mb-5">
+        <div class="col-12">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form method="post" action="/Commande/AjouterAuPanier" id="addToCartForm">
+                    <input type="hidden" name="type" value="burger" />
+                    <input type="hidden" name="id" value="@Model.Burger.Id" />
+                    <input type="hidden" name="quantite" id="hiddenQuantity" value="1" />
+                    <div id="complementsInput"></div>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">
+                        <i class="fas fa-shopping-cart"></i> AJOUTER AU PANIER
+                    </button>
+                </form>
+            }
+            else
+            {
+                <a href="/Account/Login" class="btn btn-primary btn-block btn-lg">
+                    <i class="fas fa-sign-in-alt"></i> CONNEXION POUR COMMANDER
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let quantity = 1;
+
+        function increaseQuantity() {
+            quantity++;
+            document.getElementById('quantity').textContent = quantity;
+            document.getElementById('hiddenQuantity').value = quantity;
+        }
+
+        function decreaseQuantity() {
+            if (quantity > 1) {
+                quantity--;
+                document.getElementById('quantity').textContent = quantity;
+                document.getElementById('hiddenQuantity').value = quantity;
+            }
+        }
+
+        // Size selection
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.size-btn').forEach(b => {
+                    b.classList.remove('btn-primary', 'active');
+                    b.classList.add('btn-outline-primary');
+                });
+                this.classList.remove('btn-outline-primary');
+                this.classList.add('btn-primary', 'active');
+            });
+        });
+
+        // Handle form submission with complements
+        document.getElementById('addToCartForm')?.addEventListener('submit', function(e) {
+            const checkedComplements = Array.from(document.querySelectorAll('input[name="complementIds"]:checked'))
+                .map(cb => cb.value);
+            
+            // Add complement inputs to form
+            const complementsDiv = document.getElementById('complementsInput');
+            complementsDiv.innerHTML = '';
+            checkedComplements.forEach(id => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'complementIds';
+                input.value = id;
+                complementsDiv.appendChild(input);
+            });
+        });
+    </script>
+}

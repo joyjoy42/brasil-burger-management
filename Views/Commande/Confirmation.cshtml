@@ -1,0 +1,146 @@
+@model BrasilBurger.Web.Models.ViewModels.CommandeViewModel
+@{
+    ViewData["Title"] = "Confirmation de commande";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4"><i class="fas fa-check-circle"></i> Confirmation de commande</h2>
+
+    @if (Model.Panier?.Items.Any() != true)
+    {
+        <div class="alert alert-warning">
+            Votre panier est vide. <a href="/Catalogue">Retour au catalogue</a>
+        </div>
+    }
+    else
+    {
+        <form asp-action="ValiderCommande" method="post">
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Détails de la commande -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-shopping-bag"></i> Détails de la commande</h5>
+                        </div>
+                        <div class="card-body">
+                            @foreach (var item in Model.Panier.Items)
+                            {
+                                <div class="row mb-3 pb-3 border-bottom">
+                                    <div class="col-md-6">
+                                        <h6 class="mb-1">@item.Nom</h6>
+                                        <small class="text-muted">@item.Type.ToUpper()</small>
+                                        @if (item.Complements.Any())
+                                        {
+                                            <p class="text-muted mb-0">
+                                                <small><i class="fas fa-plus-circle"></i> @string.Join(", ", item.Complements)</small>
+                                            </p>
+                                        }
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <span>@item.PrixUnitaire.ToString("N0") FCFA</span>
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <span>x @item.Quantite</span>
+                                    </div>
+                                    <div class="col-md-2 text-right">
+                                        <strong style="color: var(--primary-orange);">@item.SousTotal.ToString("N0") FCFA</strong>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Type de livraison -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="fas fa-truck"></i> Livraison</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-0">
+                                <strong>Type:</strong> 
+                                @switch (Model.TypeLivraison ?? Model.Panier.TypeLivraison)
+                                {
+                                    case "sur_place":
+                                        <span><i class="fas fa-utensils"></i> Sur place</span>
+                                        break;
+                                    case "a_recuperer":
+                                        <span><i class="fas fa-shopping-bag"></i> À récupérer</span>
+                                        break;
+                                    case "livraison":
+                                        <span><i class="fas fa-truck"></i> Livraison à domicile</span>
+                                        break;
+                                    default:
+                                        <span class="text-warning">Non spécifié</span>
+                                        break;
+                                }
+                            </p>
+                            @if (Model.ZoneId.HasValue || Model.Panier.ZoneId.HasValue)
+                            {
+                                <p class="mb-0"><strong>Zone:</strong> @(Model.ZoneId ?? Model.Panier.ZoneId)</p>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Méthode de paiement -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="fas fa-credit-card"></i> Méthode de paiement</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="MethodePaiement" id="wave" value="wave" checked required>
+                                <label class="form-check-label" for="wave">
+                                    <i class="fas fa-mobile-alt"></i> Wave
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="MethodePaiement" id="om" value="om" required>
+                                <label class="form-check-label" for="om">
+                                    <i class="fas fa-mobile-alt"></i> Orange Money
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card sticky-top" style="top: 20px;">
+                        <div class="card-body">
+                            <h5 class="mb-3">Récapitulatif</h5>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Sous-total</span>
+                                <strong>@Model.Panier.Total.ToString("N0") FCFA</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Frais de livraison</span>
+                                <strong class="text-success">Gratuit</strong>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-4">
+                                <h5>Total à payer</h5>
+                                <h4 style="color: var(--primary-orange);">@Model.Panier.Total.ToString("N0") FCFA</h4>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block btn-lg mb-3">
+                                <i class="fas fa-check-circle"></i> Valider la commande
+                            </button>
+
+                            <a href="/Commande/Panier" class="btn btn-outline-secondary btn-block">
+                                <i class="fas fa-arrow-left"></i> Retour au panier
+                            </a>
+
+                            <div class="alert alert-info mt-3 mb-0">
+                                <small>
+                                    <i class="fas fa-info-circle"></i> 
+                                    En validant, vous acceptez nos conditions générales de vente.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    }
+</div>
+
