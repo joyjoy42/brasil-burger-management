@@ -10,6 +10,8 @@ public class Menu {
     private List<Complement> complements;
     private boolean archive;
 
+    public Menu() {}
+
     public Menu(int id, String nom, String image, List<Burger> burgers, List<Complement> complements, boolean archive) {
         this.id = id;
         this.nom = nom;

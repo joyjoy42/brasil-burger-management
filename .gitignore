@@ -1,0 +1,41 @@
+# Fichiers de configuration avec identifiants sensibles
+appsettings.json
+**/database.properties
+IDENTIFIANTS.md
+
+# Fichiers de build
+bin/
+obj/
+target/
+out/
+*.class
+
+# Bases de données locales
+*.db
+*.sqlite
+*.sqlite3
+
+# Fichiers de logs
+*.log
+logs/
+
+# Fichiers temporaires
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# IDE
+.vs/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node modules (si utilisé)
+node_modules/
+
+# Fichiers de déploiement
+*.publish
+*.zip
+
