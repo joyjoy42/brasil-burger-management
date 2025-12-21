@@ -1,0 +1,48 @@
+# .dockerignore pour optimiser le build Docker
+
+# Fichiers de build
+bin/
+obj/
+out/
+target/
+*.dll
+*.exe
+*.pdb
+
+# Fichiers de configuration sensibles
+appsettings.json
+**/database.properties
+IDENTIFIANTS.md
+
+# Bases de données locales
+*.db
+*.sqlite
+*.sqlite3
+
+# Fichiers de logs
+*.log
+logs/
+
+# IDE
+.vs/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# Fichiers temporaires
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Node modules
+node_modules/
