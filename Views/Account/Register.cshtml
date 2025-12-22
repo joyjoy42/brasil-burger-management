@@ -22,14 +22,20 @@
             <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
 
             <div class="form-group-custom">
-                <label class="form-label-custom" asp-for="Nom">NAME</label>
-                <input asp-for="Nom" class="form-input-custom" placeholder="john doe" />
+                <label class="form-label-custom" asp-for="Nom">NOM</label>
+                <input asp-for="Nom" class="form-input-custom" placeholder="Doe" />
                 <span asp-validation-for="Nom" class="text-danger"></span>
             </div>
 
             <div class="form-group-custom">
+                <label class="form-label-custom" asp-for="Prenom">PRÉNOM</label>
+                <input asp-for="Prenom" class="form-input-custom" placeholder="John" />
+                <span asp-validation-for="Prenom" class="text-danger"></span>
+            </div>
+
+            <div class="form-group-custom">
                 <label class="form-label-custom" asp-for="Email">EMAIL</label>
-                <input asp-for="Email" class="form-input-custom" placeholder="example@gmail.com" />
+                <input asp-for="Email" type="email" class="form-input-custom" placeholder="example@gmail.com" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
