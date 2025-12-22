@@ -11,14 +11,16 @@ ENV ASPNETCORE_URLS=http://+:10000
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 
-# Copier les fichiers de projet (si .csproj à la racine)
-# Si le projet est dans un sous-dossier, ajustez le chemin
-COPY *.csproj ./
-RUN dotnet restore
+# Copier le fichier .csproj et restaurer les dépendances
+COPY BrasilBurger.Web.csproj ./
+RUN dotnet restore BrasilBurger.Web.csproj
 
 # Copier le reste des fichiers
 COPY . ./
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet build BrasilBurger.Web.csproj -c Release --no-restore
+
+# Publier l'application
+RUN dotnet publish BrasilBurger.Web.csproj -c Release -o /app/publish --no-build
 
 # Stage 3: Final
 FROM base AS final
