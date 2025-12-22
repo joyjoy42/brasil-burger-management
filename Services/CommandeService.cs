@@ -25,6 +25,13 @@ namespace BrasilBurger.Web.Services
                 if (string.IsNullOrWhiteSpace(typeLiv))
                     typeLiv = model.Panier?.TypeLivraison;
 
+                // Vérifier que le panier n'est pas vide
+                if (model.Panier == null || !model.Panier.Items.Any())
+                {
+                    return null;
+                }
+
+                // Créer la commande avec état initial "en_attente_paiement"
                 var commande = new Commande
                 {
                     Numero = GenerateNumeroCommande(),
@@ -32,7 +39,7 @@ namespace BrasilBurger.Web.Services
                     TypeLivraison = NormalizeTypeLivraison(typeLiv),
                     ZoneId = model.ZoneId,
                     MontantTotal = model.Panier.Total,
-                    Etat = "validee", // Validée après paiement
+                    Etat = "en_attente_paiement", // État initial : en attente de paiement
                     DateCommande = DateTime.Now
                 };
 
@@ -55,18 +62,33 @@ namespace BrasilBurger.Web.Services
                     _context.LignesCommande.Add(ligne);
                 }
 
+                // Vérifier qu'une commande ne peut être payée qu'une seule fois
+                var existingPaiement = await _context.Paiements
+                    .FirstOrDefaultAsync(p => p.CommandeId == commande.Id);
+                
+                if (existingPaiement != null)
+                {
+                    // Commande déjà payée, annuler la transaction
+                    await transaction.RollbackAsync();
+                    return null;
+                }
+
                 // Créer le paiement
                 var paiement = new Paiement
                 {
                     CommandeId = commande.Id,
                     Montant = model.Panier.Total,
-                    Methode = model.MethodePaiement,
+                    Methode = model.MethodePaiement ?? "wave", // Par défaut Wave
                     DatePaiement = DateTime.Now,
-                    Statut = "success",
+                    Statut = "success", // Simulation : en production, vérifier avec l'API
                     Reference = $"PAY-{commande.Numero}-{DateTime.Now:yyyyMMddHHmmss}"
                 };
 
                 _context.Paiements.Add(paiement);
+                await _context.SaveChangesAsync();
+
+                // Après paiement réussi, mettre la commande à "validee"
+                commande.Etat = "validee";
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
