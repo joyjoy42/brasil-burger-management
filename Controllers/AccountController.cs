@@ -103,26 +103,26 @@ namespace BrasilBurger.Web.Controllers
 
                 // Auto-login after registration
                 var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, client.Id.ToString()),
-                new Claim(ClaimTypes.Name, $"{client.Prenom} {client.Nom}"),
-                new Claim(ClaimTypes.Email, client.Email)
-            };
+                {
+                    new Claim(ClaimTypes.NameIdentifier, client.Id.ToString()),
+                    new Claim(ClaimTypes.Name, $"{client.Prenom} {client.Nom}"),
+                    new Claim(ClaimTypes.Email, client.Email)
+                };
 
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var authProperties = new AuthenticationProperties
-            {
-                IsPersistent = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30)
-            };
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30)
+                };
 
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity),
-                authProperties);
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    authProperties);
 
-            TempData["SuccessMessage"] = "Inscription réussie ! Bienvenue !";
-            return RedirectToAction("Index", "Catalogue");
+                TempData["SuccessMessage"] = "Inscription réussie ! Bienvenue !";
+                return RedirectToAction("Index", "Catalogue");
         }
 
         [HttpPost]
