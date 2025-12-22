@@ -1,8 +1,0 @@
-com\brasilburger\models\Complement.class
-com\brasilburger\utils\DataLoader.class
-com\brasilburger\utils\DataLoader$1.class
-com\brasilburger\models\Burger.class
-com\brasilburger\App.class
-com\brasilburger\utils\ObjectMapper.class
-com\brasilburger\services\BurgerService.class
-com\brasilburger\models\Menu.class
