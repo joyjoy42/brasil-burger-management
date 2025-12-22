@@ -14,6 +14,10 @@ target/
 out/
 *.class
 
+# Fichiers Java compilés
+BrasilBurger_Java/target/
+BrasilBurger_Java/out/
+
 # Bases de données locales
 *.db
 *.db-shm
