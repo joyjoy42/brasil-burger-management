@@ -61,7 +61,9 @@ using (var scope = app.Services.CreateScope())
     if (!context.Burgers.Any())
     {
         // Burgers - Images hébergées sur Cloudinary
+        // Si les images ne s'affichent pas, vérifiez qu'elles existent sur Cloudinary dans le dossier "brasil-burger"
         var cloudinaryBase = "https://res.cloudinary.com/dbkji1d1j/image/upload/brasil-burger";
+        // Alternative avec placeholders : var cloudinaryBase = "https://via.placeholder.com/800x600?text=";
         var burgers = new[]
         {
             new Burger { Nom = "Burger Classique", Description = "Steak, salade, tomate, sauce", Prix = 2500m, Image = $"{cloudinaryBase}/burger-classique.jpg" },
