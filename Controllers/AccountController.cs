@@ -78,26 +78,28 @@ namespace BrasilBurger.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return View(model);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
 
-            // Check if email already exists
-            var existingClient = await _clientService.GetClientByEmailAsync(model.Email);
-            if (existingClient != null)
-            {
-                ModelState.AddModelError(nameof(model.Email), "Cet email est déjà utilisé");
-                return View(model);
-            }
+                // Check if email already exists
+                var existingClient = await _clientService.GetClientByEmailAsync(model.Email);
+                if (existingClient != null)
+                {
+                    ModelState.AddModelError(nameof(model.Email), "Cet email est déjà utilisé");
+                    return View(model);
+                }
 
-            var client = await _clientService.RegisterAsync(model);
+                var client = await _clientService.RegisterAsync(model);
 
-            if (client == null)
-            {
-                ModelState.AddModelError(string.Empty, "Une erreur est survenue lors de l'inscription");
-                return View(model);
-            }
+                if (client == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Une erreur est survenue lors de l'inscription");
+                    return View(model);
+                }
 
             // Auto-login after registration
             var claims = new List<Claim>
