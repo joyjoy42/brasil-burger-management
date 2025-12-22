@@ -1,5 +1,6 @@
 @model BrasilBurger.Web.Models.ViewModels.CatalogueViewModel
 @using BrasilBurger.Web.Models.ViewModels
+@using System.Web
 @{
     ViewData["Title"] = "Catalogue";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -72,7 +73,11 @@
                 {
                     <div class="food-card">
                         <a href="/Catalogue/DetailsBurger/@burger.Id" style="text-decoration: none; color: inherit;">
-                            <img src="@BrasilBurger.Web.Helpers.ImageHelper.GetImageUrl(burger.Image, "/images/default-burger.png")" alt="@burger.Nom" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=@burger.Nom'" />
+                            @{
+                                var burgerImageUrl = BrasilBurger.Web.Helpers.ImageHelper.GetImageUrl(burger.Image, "/images/default-burger.png", burger.Nom);
+                                var burgerPlaceholder = $"https://via.placeholder.com/300x200/FF6B35/FFFFFF?text={HttpUtility.UrlEncode(burger.Nom)}";
+                            }
+                            <img src="@burgerImageUrl" alt="@burger.Nom" onerror="this.onerror=null; this.src='@burgerPlaceholder'" />
                             <div class="food-card-body">
                                 <h5 class="food-card-title">@burger.Nom</h5>
                                 <p class="text-muted mb-2" style="font-size: 0.9rem;">@(burger.Description ?? "Burger délicieux")</p>
@@ -104,7 +109,11 @@
                 {
                     <div class="food-card">
                         <a href="/Catalogue/DetailsMenu/@menu.Id" style="text-decoration: none; color: inherit;">
-                            <img src="@BrasilBurger.Web.Helpers.ImageHelper.GetImageUrl(menu.Image, "/images/default-menu.png")" alt="@menu.Nom" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=@menu.Nom'" />
+                            @{
+                                var menuImageUrl = BrasilBurger.Web.Helpers.ImageHelper.GetImageUrl(menu.Image, "/images/default-menu.png", menu.Nom);
+                                var menuPlaceholder = $"https://via.placeholder.com/300x200/FF6B35/FFFFFF?text={HttpUtility.UrlEncode(menu.Nom)}";
+                            }
+                            <img src="@menuImageUrl" alt="@menu.Nom" onerror="this.onerror=null; this.src='@menuPlaceholder'" />
                             <div class="food-card-body">
                                 <h5 class="food-card-title">@menu.Nom</h5>
                                 <p class="text-muted mb-2" style="font-size: 0.9rem;">@(menu.Description ?? "Menu complet")</p>

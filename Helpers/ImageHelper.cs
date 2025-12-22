@@ -8,13 +8,20 @@ namespace BrasilBurger.Web.Helpers
         private const string CloudinaryBase = "https://res.cloudinary.com/dbkji1d1j/image/upload/brasil-burger";
         
         /// <summary>
-        /// Obtient l'URL complète d'une image
+        /// Obtient l'URL complète d'une image avec fallback vers placeholder
         /// </summary>
-        public static string GetImageUrl(string? imageUrl, string defaultImage = "/images/default-burger.png")
+        public static string GetImageUrl(string? imageUrl, string defaultImage = "/images/default-burger.png", string? placeholderText = null)
         {
-            // Si l'URL est vide ou null, retourner l'image par défaut
+            // Si l'URL est vide ou null, utiliser un placeholder
             if (string.IsNullOrWhiteSpace(imageUrl))
+            {
+                if (!string.IsNullOrEmpty(placeholderText))
+                {
+                    var encodedText = System.Web.HttpUtility.UrlEncode(placeholderText);
+                    return $"https://via.placeholder.com/300x200/FF6B35/FFFFFF?text={encodedText}";
+                }
                 return defaultImage;
+            }
             
             // Si c'est déjà une URL complète (http/https), la retourner telle quelle
             if (imageUrl.StartsWith("http://") || imageUrl.StartsWith("https://"))
