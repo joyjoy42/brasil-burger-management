@@ -129,7 +129,7 @@ psql 'postgresql://neondb_owner:npg_Q28lkcThzxRG@ep-withered-surf-a4zfsqbd-poole
 - [x] Diagramme de Séquence (livraison)
 - [x] MLD (Modèle Logique de Données)
 - [x] Script SQL de création de la base de données
-- [ ] Maquettes Figma (à ajouter)
+- [x] Maquettes Figma (lien ajouté dans `Maquettes/liens_figma.md`)
 
 ---
 
