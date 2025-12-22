@@ -4,7 +4,7 @@ services:
     env: dotnet
     region: oregon
     plan: free
-    buildCommand: dotnet restore && dotnet publish -c Release -o ./publish
+    buildCommand: dotnet restore BrasilBurger.Web.csproj && dotnet publish BrasilBurger.Web.csproj -c Release -o ./publish
     startCommand: dotnet ./publish/BrasilBurger.Web.dll
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
