@@ -27,11 +27,12 @@ Cette branche contient tous les éléments de modélisation et de conception du 
 ### ✅ Maquettes Figma
 
 - **Dossier** : `Maquettes/`
+- **Lien Figma** : [Voir les maquettes](https://www.figma.com/design/Xnl3Go24Y7PR4MI5IS5NWH/Untitled?node-id=0-1&t=oqnILA2BIndMAzMm-1)
 - Maquettes de l'application mobile (client)
 - Maquettes de l'application web gestionnaire
 - Design system et composants UI
 
-**Note** : Les maquettes Figma peuvent être partagées via un lien ou exportées dans ce dossier.
+**Fichier** : `Maquettes/liens_figma.md` contient le lien direct vers les maquettes Figma.
 
 ### ✅ MLD (Modèle Logique de Données)
 
