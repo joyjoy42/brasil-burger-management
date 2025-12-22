@@ -1,3 +1,5 @@
+using System.Web;
+
 namespace BrasilBurger.Web.Helpers
 {
     /// <summary>
@@ -17,7 +19,7 @@ namespace BrasilBurger.Web.Helpers
             {
                 if (!string.IsNullOrEmpty(placeholderText))
                 {
-                    var encodedText = System.Web.HttpUtility.UrlEncode(placeholderText);
+                    var encodedText = HttpUtility.UrlEncode(placeholderText);
                     return $"https://via.placeholder.com/300x200/FF6B35/FFFFFF?text={encodedText}";
                 }
                 return defaultImage;
