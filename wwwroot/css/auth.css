@@ -72,6 +72,29 @@
     margin-bottom: 25px;
 }
 
+.form-section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1A1A2E;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #FF6B35;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form-section-title:first-child {
+    margin-top: 0;
+}
+
+.form-section-subtitle {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
 .form-label-custom {
     font-weight: 600;
     color: #333;
