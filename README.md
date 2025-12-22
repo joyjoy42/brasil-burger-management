@@ -1,99 +1,175 @@
-# 📊 Brasil Burger - Modélisation
+# 🐘 Brasil Burger - Application Symfony (Gestionnaire)
 
-**Branche** : `modelisation`  
-**Livrable** : 14/12/2025  
-**Type** : Diagrammes UML, Maquettes, MLD, Script SQL
-
----
-
-## 🎯 Contenu de cette Branche
-
-Cette branche contient tous les éléments de modélisation et de conception du projet Brasil Burger :
-
-### ✅ Diagrammes UML
-
-- **Diagramme Use Case** : Représentation des acteurs et des cas d'utilisation
-- **Diagramme de Classe** : Structure des classes et leurs relations
-- **Diagramme de Séquence** : Interactions entre les objets pour les scénarios principaux
-
-### ✅ Maquettes Figma
-
-- Maquettes de l'application mobile (client)
-- Maquettes de l'application web gestionnaire
-- Design system et composants UI
-
-### ✅ MLD (Modèle Logique de Données)
-
-- Modèle logique de la base de données
-- Relations entre les tables
-- Contraintes et règles métier
-
-### ✅ Script SQL
-
-- Script de création de la base de données PostgreSQL
-- Création des tables
-- Contraintes, clés primaires et étrangères
-- Index et optimisations
+**Branche** : `symfony`  
+**Livrable** : 30/12/2025 + Déploiement  
+**Type** : Application web Symfony
 
 ---
 
-## 📁 Structure Attendue
+## 🎯 Fonctionnalités Gestionnaire
+
+Cette application Symfony permet au gestionnaire de gérer les commandes, les livraisons et les statistiques du restaurant.
+
+### ✅ Authentification
+- Connexion gestionnaire
+- Sécurité des routes
+
+### ✅ Gestion des Ressources
+- **Burgers** : Ajouter, modifier, archiver (nom, prix, image)
+- **Menus** : Ajouter, modifier, archiver (nom, image)
+- **Compléments** : Ajouter, modifier, archiver (nom, prix, image)
+
+### ✅ Gestion des Commandes
+- Lister les commandes
+- Annuler une commande (par nom, prénom, téléphone)
+- Changer l'état de commande (Terminer)
+- Filtrage des commandes :
+  - Par burger ou menu
+  - Par date
+  - Par état
+  - Par client
+
+### ✅ Gestion des Livraisons
+- Regrouper les commandes par zone
+- Affecter un livreur à une livraison
+- Gestion des zones (nom, prix)
+
+### ✅ Statistiques
+- **Commandes en cours de la journée**
+- **Commandes validées de la journée**
+- **Recettes journalières**
+- **Burgers au menu les plus vendus de la journée**
+- **Commandes annulées du jour**
+
+---
+
+## 📁 Structure du Projet
 
 ```
-modelisation/
+symfony/
 ├── README.md
-├── Diagrammes/
-│   ├── UseCase_Diagram.png (ou .drawio, .uml)
-│   ├── Class_Diagram.png
-│   └── Sequence_Diagram.png
-├── Maquettes/
-│   └── (liens Figma ou fichiers)
-├── MLD/
-│   └── MLD_BrasilBurger.md (ou .png, .pdf)
-└── Database/
-    └── script_sql_creation.sql
+├── config/
+│   └── packages/
+│       └── doctrine.yaml (configuration DB)
+├── src/
+│   ├── Controller/
+│   │   ├── GestionnaireController.php
+│   │   ├── CommandeController.php
+│   │   └── StatistiqueController.php
+│   ├── Entity/
+│   │   ├── Burger.php
+│   │   ├── Menu.php
+│   │   ├── Complement.php
+│   │   ├── Commande.php
+│   │   └── ...
+│   ├── Repository/
+│   └── Service/
+├── templates/
+└── .env (configuration)
 ```
 
 ---
 
-## 🗄️ Base de Données
+## 🔧 Prérequis
 
-### Tables Principales
-
-- **Burgers** : `id`, `nom`, `prix`, `image`, `archive`
-- **Menus** : `id`, `nom`, `image`, `archive`
-- **Complements** : `id`, `nom`, `prix`, `image`, `archive`
-- **Clients** : `id`, `nom`, `prenom`, `telephone`, `email`, `mot_de_passe`
-- **Commandes** : `id`, `client_id`, `date`, `etat`, `type_livraison`, `zone_id`
-- **LigneCommandes** : `id`, `commande_id`, `produit_type`, `produit_id`, `quantite`, `prix`
-- **Paiements** : `id`, `commande_id`, `date`, `montant`, `methode` (Wave/OM)
-- **Zones** : `id`, `nom`, `prix`
-- **Livreurs** : `id`, `nom`, `prenom`, `telephone`
-- **MenuBurgers** : `menu_id`, `burger_id` (table de jointure)
-- **MenuComplements** : `menu_id`, `complement_id` (table de jointure)
-
-### ⚠️ Important
-
-La base de données est créée **manuellement** (pas via migration).  
-Le script SQL doit être exécuté directement sur PostgreSQL (Neon).
+- **PHP 8.1+**
+- **Composer**
+- **Symfony CLI** (optionnel)
+- **PostgreSQL Neon** configuré (base de données partagée)
 
 ---
 
-## 📝 Notes
+## 🚀 Installation
 
-- Les diagrammes peuvent être au format PNG, PDF, Draw.io, ou UML
-- Les maquettes Figma peuvent être partagées via un lien
-- Le script SQL doit être testé avant d'être utilisé en production
+### 1. Créer le Projet Symfony
+
+```bash
+# Si Symfony CLI installé
+symfony new brasil-burger-symfony --version="6.3" --webapp
+
+# Ou avec Composer
+composer create-project symfony/skeleton brasil-burger-symfony
+cd brasil-burger-symfony
+composer require webapp
+```
+
+### 2. Installer les Dépendances
+
+```bash
+composer require doctrine/doctrine-bundle
+composer require doctrine/orm
+composer require symfony/orm-pack
+composer require symfony/maker-bundle --dev
+```
+
+### 3. Configurer la Base de Données
+
+Éditez `.env` :
+
+```env
+DATABASE_URL="postgresql://neondb_owner:npg_Q28lkcThzxRG@ep-withered-surf-a4zfsqbd-pooler.us-east-1.aws.neon.tech:5432/neondb?sslmode=require"
+```
+
+### 4. Créer les Entités
+
+```bash
+php bin/console make:entity
+```
 
 ---
 
-## 🔗 Liens Utiles
+## 🗄️ Base de Données Partagée
 
-- **Base de données** : PostgreSQL Neon (https://console.neon.tech)
-- **Figma** : https://www.figma.com
-- **Draw.io** : https://app.diagrams.net
+Cette application partage la **même base de données PostgreSQL (Neon)** que :
+- L'application Java Console (branche `java`)
+- L'application C# ASP.NET MVC (branche `csharp`)
+
+**⚠️ Important** : La base de données est créée **manuellement** (pas via migration Doctrine).  
+Utilisez le script SQL de la branche `modelisation`.
+
+---
+
+## 🚀 Déploiement
+
+**Plateforme** : Render.com (https://render.com/)
+
+### Configuration Render
+
+Créer un fichier `render.yaml` :
+
+```yaml
+services:
+  - type: web
+    name: brasil-burger-symfony
+    env: php
+    region: oregon
+    plan: free
+    buildCommand: composer install --no-dev --optimize-autoloader
+    startCommand: symfony server:start --port=$PORT
+    envVars:
+      - key: APP_ENV
+        value: prod
+      - key: DATABASE_URL
+        value: postgresql://neondb_owner:npg_Q28lkcThzxRG@ep-withered-surf-a4zfsqbd-pooler.us-east-1.aws.neon.tech:5432/neondb?sslmode=require
+```
+
+---
+
+## 📝 Règles de Commit
+
+**Un commit par fonctionnalité** :
+- Exemple : `feat: Authentification gestionnaire`
+- Exemple : `feat: Lister les commandes`
+- Exemple : `feat: Statistiques journalières`
+
+---
+
+## 📚 Documentation
+
+Pour plus d'informations sur le projet complet, consultez le `README.md` principal dans la branche `main`.
 
 ---
 
 **Date** : Décembre 2025  
-**Version** : 1.0
+**Version** : 1.0  
+**Statut** : À développer
