@@ -1,153 +1,97 @@
-# ☕ Brasil Burger - Application Console Java
+# 📊 Brasil Burger - Modélisation
 
-**Branche** : `java`  
-**Livrable** : 14/12/2025 + Déploiement  
-**Type** : Application console Java
-
----
-
-## 🎯 Fonctionnalités
-
-Cette application console permet au gestionnaire de créer et gérer les ressources du restaurant :
-
-### ✅ Gestion des Burgers
-- Ajouter un burger (nom, prix, image)
-- Modifier un burger
-- Archiver un burger (soft delete)
-
-### ✅ Gestion des Menus
-- Ajouter un menu (nom, image)
-- Modifier un menu
-- Archiver un menu
-- Le prix d'un menu est calculé automatiquement (somme des prix des burgers et compléments)
-
-### ✅ Gestion des Compléments
-- Ajouter un complément (nom, prix, image)
-- Modifier un complément
-- Archiver un complément
+**Branche** : `modelisation`  
+**Livrable** : 14/12/2025  
+**Type** : Diagrammes UML, Maquettes, MLD, Script SQL
 
 ---
 
-## 📁 Structure du Projet
+## 🎯 Contenu de cette Branche
+
+Cette branche contient tous les éléments de modélisation et de conception du projet Brasil Burger :
+
+### ✅ Diagrammes UML
+
+- **Diagramme Use Case** : Représentation des acteurs et des cas d'utilisation
+- **Diagramme de Classe** : Structure des classes et leurs relations
+- **Diagramme de Séquence** : Interactions entre les objets pour les scénarios principaux
+
+### ✅ Maquettes Figma
+
+- Maquettes de l'application mobile (client)
+- Maquettes de l'application web gestionnaire
+- Design system et composants UI
+
+### ✅ MLD (Modèle Logique de Données)
+
+- Modèle logique de la base de données
+- Relations entre les tables
+- Contraintes et règles métier
+
+### ✅ Script SQL
+
+- Script de création de la base de données PostgreSQL
+- Création des tables
+- Contraintes, clés primaires et étrangères
+- Index et optimisations
+
+---
+
+## 📁 Structure Attendue
 
 ```
-BrasilBurger_Java/
-├── src/main/java/com/brasilburger/
-│   ├── App.java                    # Point d'entrée
-│   ├── models/                     # Modèles (Burger, Menu, Complement)
-│   ├── services/                   # Services métier
-│   ├── dao/                        # Data Access Objects (PostgreSQL)
-│   ├── database/                   # Gestion connexion DB
-│   └── ui/                         # Interface console
-├── src/main/resources/
-│   └── database.properties         # Configuration DB (template)
-└── pom.xml                         # Configuration Maven
-```
-
----
-
-## 🔧 Prérequis
-
-- **Java 17+**
-- **Maven 3.6+** (optionnel, recommandé)
-- **PostgreSQL Neon** configuré (base de données partagée)
-
----
-
-## 🚀 Installation et Exécution
-
-### Option 1 : Avec Maven
-
-```bash
-cd BrasilBurger_Java
-
-# Compiler
-mvn clean compile
-
-# Exécuter
-mvn exec:java
-```
-
-### Option 2 : Avec un IDE
-
-**IntelliJ IDEA (Recommandé)** :
-1. File → Open → Sélectionner `BrasilBurger_Java`
-2. IntelliJ détecte automatiquement Maven
-3. Clic droit sur `App.java` → Run 'App.main()'
-
-**VS Code** :
-1. Installer l'extension "Extension Pack for Java"
-2. Ouvrir le dossier `BrasilBurger_Java`
-3. Clic droit sur `App.java` → Run Java
-
-### Option 3 : Script Windows
-
-```bash
-cd BrasilBurger_Java
-run.bat
+modelisation/
+├── README.md
+├── Diagrammes/
+│   ├── UseCase_Diagram.png (ou .drawio, .uml)
+│   ├── Class_Diagram.png
+│   └── Sequence_Diagram.png
+├── Maquettes/
+│   └── (liens Figma ou fichiers)
+├── MLD/
+│   └── MLD_BrasilBurger.md (ou .png, .pdf)
+└── Database/
+    └── script_sql_creation.sql
 ```
 
 ---
 
-## ⚙️ Configuration
+## 🗄️ Base de Données
 
-### 1. Configuration Base de Données
+### Tables Principales
 
-Éditez `src/main/resources/database.properties` :
+- **Burgers** : `id`, `nom`, `prix`, `image`, `archive`
+- **Menus** : `id`, `nom`, `image`, `archive`
+- **Complements** : `id`, `nom`, `prix`, `image`, `archive`
+- **Clients** : `id`, `nom`, `prenom`, `telephone`, `email`, `mot_de_passe`
+- **Commandes** : `id`, `client_id`, `date`, `etat`, `type_livraison`, `zone_id`
+- **LigneCommandes** : `id`, `commande_id`, `produit_type`, `produit_id`, `quantite`, `prix`
+- **Paiements** : `id`, `commande_id`, `date`, `montant`, `methode` (Wave/OM)
+- **Zones** : `id`, `nom`, `prix`
+- **Livreurs** : `id`, `nom`, `prenom`, `telephone`
+- **MenuBurgers** : `menu_id`, `burger_id` (table de jointure)
+- **MenuComplements** : `menu_id`, `complement_id` (table de jointure)
 
-```properties
-db.host=ep-withered-surf-a4zfsqbd-pooler.us-east-1.aws.neon.tech
-db.port=5432
-db.database=neondb
-db.username=neondb_owner
-db.password=npg_Q28lkcThzxRG
-db.ssl=true
-db.sslmode=require
-```
+### ⚠️ Important
 
-**⚠️ Important** : Ne commitez jamais ce fichier avec les vrais identifiants !  
-Utilisez `database.properties.example` comme template.
-
----
-
-## 🗄️ Base de Données Partagée
-
-Cette application partage la **même base de données PostgreSQL (Neon)** que :
-- L'application C# ASP.NET MVC (branche `csharp`)
-- L'application Symfony (branche `symfony`)
-
-**Tables utilisées** :
-- `Burgers`
-- `Menus`
-- `Complements`
-- `MenuBurgers` (table de jointure)
-- `MenuComplements` (table de jointure)
+La base de données est créée **manuellement** (pas via migration).  
+Le script SQL doit être exécuté directement sur PostgreSQL (Neon).
 
 ---
 
-## 📝 Règles de Commit
+## 📝 Notes
 
-**Un commit par fonctionnalité** :
-- Exemple : `feat: Créer un menu`
-- Exemple : `feat: Lister les menus`
-- Exemple : `feat: Archiver un burger`
-
----
-
-## 🚀 Déploiement
-
-**Plateforme** : Render.com (optionnel pour application console)
-
-Si déploiement nécessaire, créer un service Render avec :
-- **Environment** : Java
-- **Build Command** : `mvn clean package`
-- **Start Command** : `java -jar target/BrasilBurger_Java-1.0-SNAPSHOT.jar`
+- Les diagrammes peuvent être au format PNG, PDF, Draw.io, ou UML
+- Les maquettes Figma peuvent être partagées via un lien
+- Le script SQL doit être testé avant d'être utilisé en production
 
 ---
 
-## 📚 Documentation
+## 🔗 Liens Utiles
 
-Pour plus d'informations sur le projet complet, consultez le `README.md` principal dans la branche `main`.
+- **Base de données** : PostgreSQL Neon (https://console.neon.tech)
+- **Figma** : https://www.figma.com
+- **Draw.io** : https://app.diagrams.net
 
 ---
 
