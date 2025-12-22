@@ -101,8 +101,8 @@ namespace BrasilBurger.Web.Controllers
                     return View(model);
                 }
 
-            // Auto-login after registration
-            var claims = new List<Claim>
+                // Auto-login after registration
+                var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, client.Id.ToString()),
                 new Claim(ClaimTypes.Name, $"{client.Prenom} {client.Nom}"),
