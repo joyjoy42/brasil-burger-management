@@ -1,11 +1,10 @@
 services:
   - type: web
     name: brasil-burger-csharp
-    env: dotnet
+    env: docker
     region: oregon
     plan: free
-    buildCommand: dotnet restore BrasilBurger.Web.csproj && dotnet publish BrasilBurger.Web.csproj -c Release -o ./publish
-    startCommand: dotnet ./publish/BrasilBurger.Web.dll
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
