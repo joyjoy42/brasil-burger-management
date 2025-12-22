@@ -123,12 +123,14 @@ namespace BrasilBurger.Web.Controllers
                     authProperties);
 
                 TempData["SuccessMessage"] = "Inscription réussie ! Bienvenue !";
-                return RedirectToAction("Index", "Catalogue");
+                
+                // Redirection explicite vers le catalogue
+                return Redirect("/Catalogue");
             }
             catch (Exception ex)
             {
                 // Log l'erreur (vous pouvez utiliser ILogger ici)
-                ModelState.AddModelError(string.Empty, "Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
+                ModelState.AddModelError(string.Empty, $"Une erreur est survenue lors de l'inscription. Veuillez réessayer. Erreur: {ex.Message}");
                 return View(model);
             }
         }
