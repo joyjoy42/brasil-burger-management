@@ -8,7 +8,6 @@ C:\Users\hp zion\Documents\brasil-burger-management\obj\Debug\net6.0\BrasilBurge
 C:\Users\hp zion\Documents\brasil-burger-management\obj\Debug\net6.0\BrasilBurger.Web.RazorAssemblyInfo.cache
 C:\Users\hp zion\Documents\brasil-burger-management\obj\Debug\net6.0\BrasilBurger.Web.RazorAssemblyInfo.cs
 C:\Users\hp zion\Documents\brasil-burger-management\obj\Debug\net6.0\BrasilBurger.Web.sourcelink.json
-C:\Users\hp zion\Documents\brasil-burger-management\bin\Debug\net6.0\appsettings.json
 C:\Users\hp zion\Documents\brasil-burger-management\bin\Debug\net6.0\BrasilBurger.Web.staticwebassets.endpoints.json
 C:\Users\hp zion\Documents\brasil-burger-management\bin\Debug\net6.0\BrasilBurger.Web.exe
 C:\Users\hp zion\Documents\brasil-burger-management\bin\Debug\net6.0\BrasilBurger.Web.deps.json
@@ -87,7 +86,6 @@ C:\Users\hp zion\Documents\brasil-burger-management\obj\Debug\net6.0\BrasilBurge
 C:\Users\hp zion\Documents\brasil-burger-management\obj\Debug\net6.0\ref\BrasilBurger.Web.dll
 C:\Users\hp zion\Documents\brasil-burger-management\bin\Debug\net6.0\BrasilBurger.Web.staticwebassets.runtime.json
 C:\Users\hp zion\Documents\brasil-burger-management\bin\Debug\net6.0\appsettings.Example.json
-C:\Users\hp zion\Documents\brasil-burger-management\bin\Debug\net6.0\cloudinary_mappings.json
 C:\Users\hp zion\Documents\brasil-burger-management\bin\Debug\net6.0\CloudinaryDotNet.dll
 C:\Users\hp zion\Documents\brasil-burger-management\bin\Debug\net6.0\Newtonsoft.Json.dll
 C:\Users\hp zion\Documents\brasil-burger-management\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll

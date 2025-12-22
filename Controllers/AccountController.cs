@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using BrasilBurger.Web.Models.ViewModels;
 using BrasilBurger.Web.Services;
+using System;
 
 namespace BrasilBurger.Web.Controllers
 {
@@ -123,6 +124,13 @@ namespace BrasilBurger.Web.Controllers
 
                 TempData["SuccessMessage"] = "Inscription réussie ! Bienvenue !";
                 return RedirectToAction("Index", "Catalogue");
+            }
+            catch (Exception ex)
+            {
+                // Log l'erreur (vous pouvez utiliser ILogger ici)
+                ModelState.AddModelError(string.Empty, "Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
+                return View(model);
+            }
         }
 
         [HttpPost]
