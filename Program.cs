@@ -31,11 +31,19 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.ExpireTimeSpan = TimeSpan.FromDays(30); // Session persistante de 30 jours
         options.SlidingExpiration = true;
         options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax;
         options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest;
         options.Cookie.HttpOnly = true;
+        options.Cookie.Name = "BrasilBurger.Auth"; // Nom explicite pour le cookie
+        options.Events.OnSigningIn = async (context) =>
+        {
+            // S'assurer que la session est bien créée
+            context.Properties.IsPersistent = true;
+            context.Properties.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30);
+            await Task.CompletedTask;
+        };
     });
 
 // Session

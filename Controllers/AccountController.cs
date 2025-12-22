@@ -61,6 +61,18 @@ namespace BrasilBurger.Web.Controllers
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
 
+            // Vérifier que l'utilisateur est bien authentifié
+            if (User.Identity?.IsAuthenticated == false)
+            {
+                // Forcer la ré-authentification si nécessaire
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    authProperties);
+            }
+
+            TempData["SuccessMessage"] = $"Connexion réussie ! Bienvenue {client.Prenom} {client.Nom} ! Vous avez maintenant accès à toutes les fonctionnalités.";
+
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);
@@ -122,7 +134,17 @@ namespace BrasilBurger.Web.Controllers
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties);
 
-                TempData["SuccessMessage"] = "Inscription réussie ! Bienvenue !";
+                // Vérifier que l'utilisateur est bien authentifié
+                if (User.Identity?.IsAuthenticated == false)
+                {
+                    // Forcer la ré-authentification si nécessaire
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity),
+                        authProperties);
+                }
+
+                TempData["SuccessMessage"] = $"Inscription réussie ! Bienvenue {client.Prenom} {client.Nom} ! Vous avez maintenant accès à toutes les fonctionnalités.";
                 
                 // Redirection explicite vers le catalogue
                 return Redirect("/Catalogue");
