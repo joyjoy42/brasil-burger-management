@@ -62,7 +62,7 @@
                 {
                     <div class="food-card">
                         <a href="/Catalogue/DetailsBurger/@burger.Id" style="text-decoration: none; color: inherit;">
-                            <img src="@(burger.Image ?? "/images/default-burger.png")" alt="@burger.Nom" onerror="this.src='https://via.placeholder.com/300x200?text=@burger.Nom'" />
+                            <img src="@BrasilBurger.Web.Helpers.ImageHelper.GetImageUrl(burger.Image, "/images/default-burger.png")" alt="@burger.Nom" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=@System.Web.HttpUtility.UrlEncode(burger.Nom)'" />
                             <div class="food-card-body">
                                 <h5 class="food-card-title">@burger.Nom</h5>
                                 <p class="text-muted mb-2" style="font-size: 0.9rem;">@(burger.Description ?? "Burger délicieux")</p>
@@ -94,7 +94,7 @@
                 {
                     <div class="food-card">
                         <a href="/Catalogue/DetailsMenu/@menu.Id" style="text-decoration: none; color: inherit;">
-                            <img src="@(menu.Image ?? "/images/default-menu.png")" alt="@menu.Nom" onerror="this.src='https://via.placeholder.com/300x200?text=@menu.Nom'" />
+                            <img src="@BrasilBurger.Web.Helpers.ImageHelper.GetImageUrl(menu.Image, "/images/default-menu.png")" alt="@menu.Nom" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=@System.Web.HttpUtility.UrlEncode(menu.Nom)'" />
                             <div class="food-card-body">
                                 <h5 class="food-card-title">@menu.Nom</h5>
                                 <p class="text-muted mb-2" style="font-size: 0.9rem;">@(menu.Description ?? "Menu complet")</p>

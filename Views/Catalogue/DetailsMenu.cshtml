@@ -19,7 +19,7 @@
     <!-- Product Image -->
     <div class="row mb-4">
         <div class="col-12">
-            <img src="@(Model.Menu.Image ?? "/images/default-menu.png")" 
+            <img src="@BrasilBurger.Web.Helpers.ImageHelper.GetImageUrl(Model.Menu.Image, "/images/default-menu.png")" 
                  alt="@Model.Menu.Nom" 
                  class="img-fluid rounded"
                  style="width: 100%; max-height: 400px; object-fit: cover;"

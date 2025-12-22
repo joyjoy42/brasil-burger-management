@@ -19,11 +19,11 @@
     <!-- Product Image -->
     <div class="row mb-4">
         <div class="col-12">
-            <img src="@(Model.Burger.Image ?? "/images/default-burger.png")" 
+            <img src="@BrasilBurger.Web.Helpers.ImageHelper.GetImageUrl(Model.Burger.Image, "/images/default-burger.png")" 
                  alt="@Model.Burger.Nom" 
                  class="img-fluid rounded"
                  style="width: 100%; max-height: 400px; object-fit: cover;"
-                 onerror="this.src='https://via.placeholder.com/800x400?text=@Model.Burger.Nom'" />
+                 onerror="this.onerror=null; this.src='https://via.placeholder.com/800x400?text=@System.Web.HttpUtility.UrlEncode(Model.Burger.Nom)'" />
         </div>
     </div>
 
