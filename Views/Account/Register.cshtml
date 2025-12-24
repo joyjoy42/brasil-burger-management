@@ -10,7 +10,7 @@
 
 <div class="auth-page">
     <div class="auth-top-section">
-        <a href="/" class="auth-back-btn">
+        <a href="/Account/Login.cshtml" class="auth-back-btn">
             <i class="fas fa-arrow-left"></i>
         </a>
         <h1 class="auth-title">Sign Up</h1>
@@ -83,22 +83,14 @@
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
 
-            <button type="submit" class="auth-submit-btn" onclick="window.location.href='/Catalogue'">SIGN UP</button>
+            <button type="submit" class="auth-submit-btn" onclick="window.location.href='/Catalogue/Index.cshtml'">SIGN UP</button>
         </form>
 
         <div class="auth-signup-link">
-            Already have an account? <a asp-action="Login" href="/Account/Login">LOG IN</a>
+            Already have an account? <a asp-action="Login" href="/Account/Login.cshtml">LOG IN</a>
         </div>
     </div>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        function togglePassword(inputId, iconId) {
-            const passwordInput = document.getElementById(inputId);
-            const eyeIcon = document.getElementById(iconId);
-            if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 eyeIcon.classList.remove('fa-eye');
                 eyeIcon.classList.add('fa-eye-slash');
