@@ -23,3 +23,4 @@ SELECT 'Menus mis à jour :', COUNT(*) FROM menus WHERE image LIKE '%placeholder
 UNION ALL
 SELECT 'Compléments mis à jour :', COUNT(*) FROM complements WHERE image LIKE '%placeholder%';
 
+

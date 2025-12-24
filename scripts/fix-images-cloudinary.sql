@@ -60,3 +60,4 @@ SET image = 'https://res.cloudinary.com/dbkji1d1j/image/upload/brasil-burger/' |
     END
 WHERE image LIKE '%placeholder%';
 
+

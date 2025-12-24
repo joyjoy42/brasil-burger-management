@@ -13,7 +13,7 @@
         <a href="/" class="auth-back-btn">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="auth-title">Connexion</h1>
+        <h1 class="auth-title">Sign Up</h1>
         <p class="auth-subtitle">Please sign up to get started</p>
     </div>
 
@@ -83,11 +83,11 @@
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
 
-            <button type="submit" class="auth-submit-btn">SIGN UP</button>
+            <button type="submit" class="auth-submit-btn" onclick="window.location.href='/Catalogue'">SIGN UP</button>
         </form>
 
         <div class="auth-signup-link">
-            Already have an account? <a asp-action="Login">LOG IN</a>
+            Already have an account? <a asp-action="Login" href="/Account/Login">LOG IN</a>
         </div>
     </div>
 </div>

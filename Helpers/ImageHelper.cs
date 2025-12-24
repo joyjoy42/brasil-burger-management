@@ -1,4 +1,5 @@
 using System.Web;
+using System.Linq;
 
 namespace BrasilBurger.Web.Helpers
 {
@@ -7,7 +8,7 @@ namespace BrasilBurger.Web.Helpers
     /// </summary>
     public static class ImageHelper
     {
-        private const string CloudinaryBase = "https://res.cloudinary.com/dbkji1d1j/image/upload/brasil-burger";
+        private const string CloudinaryBase = "https://res.cloudinary.com/dbkji1d1j/image/upload";
         
         /// <summary>
         /// Obtient l'URL complète d'une image avec fallback vers placeholder
@@ -27,13 +28,36 @@ namespace BrasilBurger.Web.Helpers
             
             // Si c'est déjà une URL complète (http/https), la retourner telle quelle
             if (imageUrl.StartsWith("http://") || imageUrl.StartsWith("https://"))
+            {
+                // Vérifier si c'est une URL Cloudinary valide
+                if (IsCloudinaryUrl(imageUrl))
+                {
+                    // Si c'est déjà une URL Cloudinary complète, la retourner telle quelle
+                    // Format: https://res.cloudinary.com/{cloud}/image/upload/v{version}/{public-id}
+                    // ou: https://res.cloudinary.com/{cloud}/image/upload/{public-id}
+                    return imageUrl;
+                }
                 return imageUrl;
+            }
             
             // Si c'est un chemin local (commence par /), le retourner tel quel
             if (imageUrl.StartsWith("/"))
                 return imageUrl;
             
-            // Sinon, construire l'URL Cloudinary complète
+            // Si c'est juste un nom de fichier ou un chemin relatif
+            // Note: Les URLs Cloudinary réelles incluent souvent un hash et l'extension
+            // Format attendu: https://res.cloudinary.com/{cloud}/image/upload/{public-id}
+            // Le public-id peut inclure l'extension et un hash (ex: wings-bbq_l9ybuh.png)
+            
+            // Si l'imageUrl contient déjà un chemin avec dossier (ancien format)
+            if (imageUrl.Contains("/"))
+            {
+                // Extraire juste le nom de fichier
+                var fileName = System.IO.Path.GetFileName(imageUrl);
+                return $"{CloudinaryBase}/{fileName}";
+            }
+            
+            // Sinon, utiliser tel quel (le public-id complet devrait être fourni)
             return $"{CloudinaryBase}/{imageUrl}";
         }
         

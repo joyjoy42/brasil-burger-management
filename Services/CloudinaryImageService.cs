@@ -59,7 +59,7 @@ namespace BrasilBurger.Web.Services
                 url += $"/{string.Join(",", transformations)}";
             }
             
-            url += $"/{publicId}";
+            url += $"/brasil-burger/{publicId}";
             
             return url;
         }

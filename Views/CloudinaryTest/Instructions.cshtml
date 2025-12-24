@@ -1,0 +1,58 @@
+@{
+    ViewData["Title"] = "Cloudinary URL Format Instructions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3>How to Find the Correct Cloudinary URL Format</h3>
+        </div>
+        <div class="card-body">
+            <h5>Step 1: Check Cloudinary Dashboard</h5>
+            <ol>
+                <li>Go to <a href="https://console.cloudinary.com" target="_blank">https://console.cloudinary.com</a></li>
+                <li>Navigate to <strong>Media Library</strong></li>
+                <li>Open the <strong>brasil-burger</strong> folder</li>
+                <li>Click on an image (e.g., burger-classique.jpg)</li>
+                <li>Look at the <strong>URL</strong> or <strong>Public ID</strong> shown</li>
+            </ol>
+
+            <h5 class="mt-4">Step 2: Check the URL Format</h5>
+            <p>The URL shown in Cloudinary will look like one of these:</p>
+            <ul>
+                <li><code>https://res.cloudinary.com/dbkji1d1j/image/upload/v1234567890/brasil-burger/burger-classique</code></li>
+                <li><code>https://res.cloudinary.com/dbkji1d1j/image/upload/brasil-burger/burger-classique</code></li>
+                <li><code>https://res.cloudinary.com/dbkji1d1j/image/upload/v1234567890/brasil-burger/burger-classique.jpg</code></li>
+            </ul>
+
+            <h5 class="mt-4">Step 3: Common Issues</h5>
+            <div class="alert alert-warning">
+                <strong>Issue 1:</strong> Public ID might not include file extension<br>
+                <strong>Solution:</strong> Use the public_id without extension in URLs
+            </div>
+            <div class="alert alert-warning">
+                <strong>Issue 2:</strong> Folder might be part of public_id or separate<br>
+                <strong>Solution:</strong> Check if folder is included in the public_id shown in dashboard
+            </div>
+            <div class="alert alert-warning">
+                <strong>Issue 3:</strong> Version number might be required<br>
+                <strong>Solution:</strong> Cloudinary URLs can work with or without version numbers
+            </div>
+
+            <h5 class="mt-4">Step 4: Test URLs</h5>
+            <p>Visit: <a href="/CloudinaryTest/TestUrls" target="_blank">/CloudinaryTest/TestUrls</a></p>
+            <p>This will test different URL formats and show which ones work.</p>
+
+            <h5 class="mt-4">Step 5: Update Code</h5>
+            <p>Once you find the correct format, we can update the <code>ImageHelper.cs</code> to use the correct URL structure.</p>
+
+            <div class="alert alert-info mt-4">
+                <strong>Quick Check:</strong> Open one of your uploaded images in Cloudinary dashboard and copy the full URL. 
+                Then test it in your browser. If it works, we'll use that format in the code.
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -44,3 +44,4 @@ Write-Host "1. Aller sur https://console.cloudinary.com" -ForegroundColor White
 Write-Host "2. Uploader les images dans le dossier 'brasil-burger'" -ForegroundColor White
 Write-Host "3. Ou utiliser des images placeholder temporaires" -ForegroundColor White
 
+

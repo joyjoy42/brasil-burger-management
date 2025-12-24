@@ -19,11 +19,14 @@
     <!-- Product Image -->
     <div class="row mb-4">
         <div class="col-12">
-            <img src="@BrasilBurger.Web.Helpers.ImageHelper.GetImageUrl(Model.Burger.Image, "/images/default-burger.png")" 
+            @{
+                var burgerImageUrl = BrasilBurger.Web.Helpers.ImageHelper.GetImageUrl(Model.Burger.Image, "/images/default-burger.png", Model.Burger.Nom);
+                var burgerPlaceholder = $"https://via.placeholder.com/800x400/FF6B35/FFFFFF?text={System.Web.HttpUtility.UrlEncode(Model.Burger.Nom)}";
+            }
+            <img src="@burgerImageUrl.Replace("https://res.cloudinary.com/dbkji1d1j/image/upload/brasil-burger/", "")   style="width: 100%; max-height: 400px; object-fit: cover;"" 
                  alt="@Model.Burger.Nom" 
                  class="img-fluid rounded"
-                 style="width: 100%; max-height: 400px; object-fit: cover;"
-                 onerror="this.onerror=null; this.src='https://via.placeholder.com/800x400?text=@Model.Burger.Nom'" />
+                 style="width: 100%; max-height: 400px; object-fit: cover;" />
         </div>
     </div>
 
@@ -124,7 +127,7 @@
             }
             else
             {
-                <a href="/Account/Login" class="btn btn-primary btn-block btn-lg">
+                <a href="/Account/Login?returnUrl=/Catalogue/DetailsBurger/@Model.Burger.Id" class="btn btn-primary btn-block btn-lg">
                     <i class="fas fa-sign-in-alt"></i> CONNEXION POUR COMMANDER
                 </a>
             }

@@ -127,3 +127,4 @@ UPDATE menus SET image = '/images/menu-etudiant.png' WHERE nom = 'Menu Étudiant
 
 **Date** : Décembre 2025
 
+

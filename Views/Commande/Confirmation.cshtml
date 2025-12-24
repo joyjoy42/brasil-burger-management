@@ -15,7 +15,8 @@
     }
     else
     {
-        <form asp-action="ValiderCommande" method="post">
+        <form asp-action="ValiderCommande" method="post" asp-antiforgery="true">
+            @Html.AntiForgeryToken()
             <div class="row">
                 <div class="col-lg-8">
                     <!-- Détails de la commande -->
