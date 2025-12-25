@@ -1,290 +1,199 @@
-# 🍔 Brasil Burger Management System
+# Brasil Burger Management
 
-**Projet L3 ISM – Semestre 1**  
-Gestion des commandes et livraisons pour le restaurant Brasil Burger
+Application web de gestion de commandes pour le restaurant Brasil Burger, développée avec ASP.NET Core MVC.
 
----
+## 📋 Description
 
-## 📋 Table des Matières
+Brasil Burger Management est une plateforme complète permettant aux clients de :
+- Parcourir le catalogue de produits (burgers, menus, compléments, boissons)
+- Ajouter des articles au panier
+- Passer des commandes
+- Suivre l'état de leurs commandes
+- Gérer leur compte utilisateur
 
-1. [Vue d'Ensemble](#vue-densemble)
-2. [Structure du Repository](#structure-du-repository)
-3. [Branches du Projet](#branches-du-projet)
-4. [Base de Données Partagée](#base-de-données-partagée)
-5. [Déploiement](#déploiement)
-6. [Configuration](#configuration)
+## 🛠️ Technologies
 
----
+- **Framework** : ASP.NET Core 6.0 MVC
+- **Base de données** : PostgreSQL (Neon)
+- **ORM** : Entity Framework Core 6.0
+- **Authentification** : Cookie-based Authentication
+- **Hébergement d'images** : Cloudinary
+- **Déploiement** : Docker + Render.com
+- **Langage** : C#
 
-## 🎯 Vue d'Ensemble
-
-Le projet **Brasil Burger Management** est un système complet de gestion de commandes et livraisons pour un restaurant de burgers. Il est composé de **trois applications** qui partagent la **même base de données PostgreSQL (Neon)** :
-
-- **Java Console** : Application console pour la création et gestion des ressources (burgers, menus, compléments)
-- **C# ASP.NET MVC** : Application web pour les fonctionnalités client (catalogue, commandes, suivi)
-- **Symfony** : Application web pour les fonctionnalités gestionnaire (commandes, statistiques, livraisons)
-
-### 🏗️ Architecture
+## 📦 Structure du Projet
 
 ```
-┌─────────────────────────────────┐
-│         GitHub Repository        │
-│   brasil-burger-management      │
-│                                  │
-│   Branches:                      │
-│   - modelisation                 │
-│   - java                         │
-│   - csharp                       │
-│   - symfony                      │
-└────────────┬────────────────────┘
-             │
-     ┌───────┴────────┐
-     │                │
-     ▼                ▼
-┌─────────┐    ┌──────────────┐
-│  Java   │    │  C# / Symfony│
-│ Console │    │  Web Apps    │
-└────┬────┘    └──────┬───────┘
-     │                │
-     └────────┬───────┘
-              │
-              ▼
-     ┌─────────────────┐
-     │ Neon PostgreSQL │
-     │  (Base de données│
-     │    partagée)     │
-     └─────────────────┘
+brasil-burger-management/
+├── Controllers/          # Contrôleurs MVC
+├── Data/                # DbContext et configuration base de données
+├── Models/              # Entités et ViewModels
+│   ├── Entities/        # Modèles de données
+│   └── ViewModels/     # Modèles pour les vues
+├── Services/            # Services métier
+├── Views/               # Vues Razor
+├── Helpers/             # Classes utilitaires
+├── wwwroot/             # Fichiers statiques (CSS, images)
+├── Migrations/          # Migrations Entity Framework
+├── scripts/             # Scripts de déploiement et maintenance
+└── BrasilBurger_Java/   # Projet Java (en développement)
 ```
 
----
+## 🚀 Installation et Configuration
 
-## 🌿 Structure du Repository
+### Prérequis
 
-Le repository contient **4 branches principales** :
+- .NET 6.0 SDK
+- PostgreSQL (ou compte Neon)
+- Compte Cloudinary (pour les images)
+- Docker (optionnel, pour le déploiement)
 
-### 📊 Branche `modelisation`
-**Livrable** : 14/12/2025
+### Configuration
 
-**Contenu** :
-- Diagramme Use Case
-- Diagramme de Classe
-- Diagramme de Séquence (conception)
-- Maquettes Figma
-- MLD (Modèle Logique de Données)
-- Script SQL de création de la base de données
+1. **Cloner le repository**
+   ```bash
+   git clone <repository-url>
+   cd brasil-burger-management
+   ```
 
-**Accès** :
+2. **Configurer la base de données**
+   
+   Créer un fichier `appsettings.json` à partir de `appsettings.Example.json` :
+   ```json
+   {
+     "ConnectionStrings": {
+       "DefaultConnection": "Host=YOUR_HOST;Database=YOUR_DB;Username=YOUR_USER;Password=YOUR_PASSWORD;SSL Mode=Require"
+     },
+     "Cloudinary": {
+       "CloudName": "YOUR_CLOUD_NAME",
+       "ApiKey": "YOUR_API_KEY",
+       "ApiSecret": "YOUR_API_SECRET"
+     }
+   }
+   ```
+
+3. **Appliquer les migrations**
+   ```bash
+   dotnet ef database update
+   ```
+
+4. **Lancer l'application**
+   ```bash
+   dotnet run
+   ```
+
+L'application sera accessible sur `https://localhost:5001` ou `http://localhost:5000`.
+
+## 🎯 Fonctionnalités
+
+### Catalogue
+- Affichage des burgers, menus, compléments et boissons
+- Détails des produits avec images
+- Filtrage et recherche
+
+### Panier
+- Ajout/suppression d'articles
+- Modification des quantités
+- Calcul automatique du total
+- Gestion des compléments (frites, boissons)
+
+### Commandes
+- Création de commandes depuis le panier
+- Confirmation de commande
+- Suivi de l'état des commandes
+- Historique des commandes
+
+### Authentification
+- Inscription de nouveaux clients
+- Connexion/Déconnexion
+- Gestion de session (30 jours)
+- Mot de passe oublié (en développement)
+
+## 🗄️ Base de Données
+
+### Entités principales
+
+- **Clients** : Informations des utilisateurs
+- **Burger** : Produits burgers et autres plats
+- **Menu** : Menus combinés
+- **Complement** : Accompagnements et boissons
+- **Commande** : Commandes des clients
+- **LigneCommande** : Détails des articles commandés
+- **Paiement** : Informations de paiement
+
+## 🐳 Déploiement avec Docker
+
+### Build de l'image
 ```bash
-git checkout modelisation
+docker build -t brasil-burger .
 ```
 
----
-
-### ☕ Branche `java`
-**Livrable** : 14/12/2025 + Déploiement
-
-**Contenu** :
-- Application console Java
-- Création des ressources :
-  - Burgers (ajouter, modifier, archiver)
-  - Menus (ajouter, modifier, archiver)
-  - Compléments (ajouter, modifier, archiver)
-- Connexion à la base de données PostgreSQL partagée
-
-**Accès** :
+### Exécution du conteneur
 ```bash
-git checkout java
+docker run -p 10000:10000 brasil-burger
 ```
 
----
+## ☁️ Déploiement sur Render.com
 
-### 🖥️ Branche `csharp`
-**Livrable** : 20/12/2025 + Déploiement
+Le projet est configuré pour être déployé sur Render.com via le fichier `render.yaml`.
 
-**Contenu** :
-- Application ASP.NET MVC
-- Fonctionnalités Client :
-  - Catalogue de burgers et menus
-  - Détails burger/menu
-  - Commande (burger/menu)
-  - Sélection compléments
-  - Type de livraison (sur place / à emporter / livraison)
-  - Panier
-  - Authentification (inscription/connexion)
-  - Suivi des commandes
-  - Paiement (Wave/OM)
-  - Filtrage catalogue (menu/burger)
+1. Connecter le repository GitHub à Render
+2. Render détectera automatiquement le `render.yaml`
+3. Les variables d'environnement seront configurées automatiquement
 
-**Accès** :
+## 📝 Scripts Utiles
+
+- `scripts/apply-migrations.sh` : Applique les migrations en production
+- `scripts/check-database-connection.sh` : Vérifie la connexion à la base de données
+- `UpdateDatabaseWithCloudinaryUrls.ps1` : Met à jour les URLs Cloudinary dans la base
+
+## 🔧 Développement
+
+### Ajouter une migration
 ```bash
-git checkout csharp
+dotnet ef migrations add NomDeLaMigration
 ```
 
----
-
-### 🐘 Branche `symfony`
-**Livrable** : 30/12/2025 + Déploiement
-
-**Contenu** :
-- Application Symfony
-- Fonctionnalités Gestionnaire :
-  - Authentification gestionnaire
-  - Ajouter/Modifier/Archiver burgers
-  - Ajouter/Modifier/Archiver menus
-  - Ajouter/Modifier/Archiver compléments
-  - Lister les commandes
-  - Annuler une commande (par nom, prénom, téléphone)
-  - Changer l'état de commande (Terminer)
-  - Gestion livraisons (regrouper par zone, affecter livreur)
-  - Filtrage commandes (burger/menu, date, état, client)
-  - Statistiques :
-    - Commandes en cours de la journée
-    - Commandes validées de la journée
-    - Recettes journalières
-    - Burgers au menu les plus vendus de la journée
-    - Commandes annulées du jour
-
-**Accès** :
+### Mettre à jour la base de données
 ```bash
-git checkout symfony
+dotnet ef database update
 ```
 
----
-
-## 🗄️ Base de Données Partagée
-
-Les **trois projets partagent la même base de données PostgreSQL (Neon)**.
-
-### 📊 Structure des Tables
-
-- **Burgers** : `id`, `nom`, `prix`, `image`, `archive`
-- **Menus** : `id`, `nom`, `image`, `archive`
-- **Complements** : `id`, `nom`, `prix`, `image`, `archive`
-- **Clients** : `id`, `nom`, `prenom`, `telephone`, `email`, `mot_de_passe`
-- **Commandes** : `id`, `client_id`, `date`, `etat`, `type_livraison`, `zone_id`
-- **LigneCommandes** : `id`, `commande_id`, `produit_type`, `produit_id`, `quantite`, `prix`
-- **Paiements** : `id`, `commande_id`, `date`, `montant`, `methode` (Wave/OM)
-- **Zones** : `id`, `nom`, `prix`
-- **Livreurs** : `id`, `nom`, `prenom`, `telephone`
-- **MenuBurgers** : `menu_id`, `burger_id` (table de jointure)
-- **MenuComplements** : `menu_id`, `complement_id` (table de jointure)
-
-### 📝 Script SQL
-
-Le script SQL de création de la base de données se trouve dans la branche `modelisation`.
-
-**⚠️ Important** : La base de données est créée **manuellement** (pas via migration).
-
----
-
-## 🚀 Déploiement
-
-**Plateforme** : Render.com (https://render.com/)
-
-### Déploiement depuis GitHub
-
-Chaque branche peut être déployée indépendamment sur Render :
-
-1. **Branche `java`** : Application console (déploiement optionnel)
-2. **Branche `csharp`** : Service Web Render (ASP.NET MVC)
-3. **Branche `symfony`** : Service Web Render (Symfony)
-
-### Configuration Render
-
-Chaque branche contient un fichier `render.yaml` pour la configuration du déploiement.
-
-**Variables d'environnement requises** :
-- Connexion PostgreSQL (Neon)
-- Identifiants Cloudinary (pour C#)
-- Autres configurations spécifiques
-
----
-
-## ⚙️ Configuration
-
-### Base de Données PostgreSQL (Neon)
-
-**Identifiants** :
-```
-Host: ep-withered-surf-a4zfsqbd-pooler.us-east-1.aws.neon.tech
-Port: 5432
-Database: neondb
-Username: neondb_owner
-Password: npg_Q28lkcThzxRG
-SSL Mode: require
+### Générer le script SQL
+```bash
+dotnet ef migrations script
 ```
 
-**Chaîne de connexion complète** :
-```
-postgresql://neondb_owner:npg_Q28lkcThzxRG@ep-withered-surf-a4zfsqbd-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require
-```
+## 📸 Gestion des Images
 
-### Cloudinary (CDN Images)
+Les images sont hébergées sur Cloudinary. Pour ajouter/modifier des images :
 
-**Identifiants** :
-```
-Cloud Name: dbkji1d1j
-API Key: 166294258315442
-API Secret: 9bpSi55tkiP5IZnwNpHrMuw-Qsc
-```
+1. Uploader l'image sur Cloudinary dans le dossier `brasil-burger`
+2. Copier l'URL générée
+3. Mettre à jour l'entité correspondante dans `Program.cs` (seed data) ou via l'interface d'administration
 
----
+## 🔐 Sécurité
 
-## 📝 Règles de Commit
-
-**Un commit par fonctionnalité** :
-- Exemple : `feat: Créer un menu`
-- Exemple : `feat: Lister les menus`
-- Exemple : `feat: Authentification client`
-
-**Push à la fin de chaque projet** :
-- Après avoir terminé toutes les fonctionnalités d'un projet
-- Avant le déploiement
-
----
-
-## 📅 Dates de Livraison
-
-- **Livrable 1** : 14/12/2025
-  - Modélisation
-  - Java Console
-  - Déploiement
-
-- **Livrable 2** : 20/12/2025
-  - C# ASP.NET MVC
-  - Déploiement
-
-- **Livrable 3** : 30/12/2025
-  - Symfony
-  - Déploiement
-
----
-
-## 🔒 Sécurité
-
-**⚠️ Important** : Ne jamais committer les fichiers avec les vrais identifiants :
-- ❌ `appsettings.json` avec vrais credentials
-- ❌ `database.properties` avec vrais credentials
-- ✅ Utiliser `.gitignore` pour exclure ces fichiers
-- ✅ Utiliser des variables d'environnement en production
-
----
-
-## 📞 Support
-
-Pour toute question ou problème :
-1. Consultez le README spécifique de chaque branche
-2. Vérifiez les fichiers de configuration
-3. Consultez les guides de démarrage rapide
-
----
-
-**Date de mise à jour** : Décembre 2025  
-**Version** : 1.0  
-**Statut** : En développement
-
----
+- Authentification par cookies sécurisés
+- Sessions avec expiration automatique
+- Protection CSRF intégrée
+- Validation des données côté serveur
+- Connexion PostgreSQL avec SSL
 
 ## 📄 Licence
 
-Projet académique L3 ISM - Semestre 1
+Ce projet est propriétaire et confidentiel.
+
+## 👥 Contribution
+
+Pour contribuer au projet, veuillez créer une branche depuis `main` et soumettre une pull request.
+
+## 📞 Support
+
+Pour toute question ou problème, contactez l'équipe de développement.
+
+---
+
+**Version** : 1.0.0  
+**Dernière mise à jour** : 2024
+

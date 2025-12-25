@@ -170,6 +170,83 @@ namespace BrasilBurger.Web.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var token = await _clientService.GeneratePasswordResetTokenAsync(model.Email);
+            
+            // Always show success message for security (don't reveal if email exists)
+            if (token != null)
+            {
+                // In production, send email with reset link
+                // For now, we'll show the token in a message (not recommended for production)
+                TempData["ResetToken"] = token;
+                TempData["ResetEmail"] = model.Email;
+                TempData["InfoMessage"] = $"Un token de réinitialisation a été généré. Utilisez-le pour réinitialiser votre mot de passe. (Token: {token})";
+                return RedirectToAction("ResetPassword", new { email = model.Email, token = token });
+            }
+            else
+            {
+                // Still show success for security
+                TempData["InfoMessage"] = "Si cet email existe, un lien de réinitialisation a été envoyé.";
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string? email = null, string? token = null)
+        {
+            var model = new ResetPasswordViewModel
+            {
+                Email = email ?? "",
+                Token = token ?? ""
+            };
+
+            // Check if token is in TempData (from ForgotPassword redirect)
+            if (string.IsNullOrEmpty(token) && TempData["ResetToken"] != null)
+            {
+                model.Token = TempData["ResetToken"].ToString() ?? "";
+                model.Email = TempData["ResetEmail"]?.ToString() ?? "";
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var success = await _clientService.ResetPasswordAsync(model.Email, model.Token, model.Password);
+
+            if (success)
+            {
+                TempData["SuccessMessage"] = "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter.";
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Token invalide ou expiré. Veuillez demander un nouveau lien de réinitialisation.");
+                return View(model);
+            }
+        }
     }
 }
 

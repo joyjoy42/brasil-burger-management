@@ -4,12 +4,15 @@ using BrasilBurger.Web.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
+using System.Collections.Concurrent;
 
 namespace BrasilBurger.Web.Services
 {
     public class ClientService : IClientService
     {
         private readonly AppDbContext _context;
+        // In-memory storage for reset tokens (in production, use distributed cache or database)
+        private static readonly ConcurrentDictionary<string, (string Token, DateTime Expiry)> _resetTokens = new();
 
         public ClientService(AppDbContext context)
         {
@@ -82,6 +85,69 @@ namespace BrasilBurger.Web.Services
             {
                 var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
                 return Convert.ToBase64String(hashedBytes);
+            }
+        }
+
+        public async Task<string?> GeneratePasswordResetTokenAsync(string email)
+        {
+            var client = await GetClientByEmailAsync(email);
+            if (client == null)
+                return null;
+
+            // Generate a secure token
+            var tokenBytes = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(tokenBytes);
+            }
+            var token = Convert.ToBase64String(tokenBytes).Replace("+", "-").Replace("/", "_").TrimEnd('=');
+
+            // Store token with 1 hour expiry
+            var expiry = DateTime.UtcNow.AddHours(1);
+            _resetTokens[email] = (token, expiry);
+
+            // Clean up expired tokens
+            CleanupExpiredTokens();
+
+            return token;
+        }
+
+        public async Task<bool> ResetPasswordAsync(string email, string token, string newPassword)
+        {
+            // Verify token
+            if (!_resetTokens.TryGetValue(email, out var tokenData))
+                return false;
+
+            if (tokenData.Token != token || tokenData.Expiry < DateTime.UtcNow)
+            {
+                _resetTokens.TryRemove(email, out _);
+                return false;
+            }
+
+            // Get client and update password
+            var client = await GetClientByEmailAsync(email);
+            if (client == null)
+                return false;
+
+            client.Password = HashPassword(newPassword);
+            await _context.SaveChangesAsync();
+
+            // Remove used token
+            _resetTokens.TryRemove(email, out _);
+
+            return true;
+        }
+
+        private void CleanupExpiredTokens()
+        {
+            var expiredKeys = _resetTokens
+                .Where(kvp => kvp.Value.Expiry < DateTime.UtcNow)
+                .Select(kvp => kvp.Key)
+                .ToList();
+
+            foreach (var key in expiredKeys)
+            {
+                _resetTokens.TryRemove(key, out _);
             }
         }
     }

@@ -11,5 +11,7 @@ namespace BrasilBurger.Web.Services
         Task<Client?> GetClientByEmailAsync(string email);
         bool VerifyPassword(string password, string hashedPassword);
         string HashPassword(string password);
+        Task<string?> GeneratePasswordResetTokenAsync(string email);
+        Task<bool> ResetPasswordAsync(string email, string token, string newPassword);
     }
 }
