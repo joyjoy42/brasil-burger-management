@@ -10,7 +10,7 @@
 
 <div class="auth-page">
     <div class="auth-top-section">
-        <a href="/Home/Index.cshtml" class="auth-back-btn">
+        <a href="/" class="auth-back-btn">
             <i class="fas fa-arrow-left"></i>
         </a>
         <h1 class="auth-title">Log In</h1>
@@ -45,14 +45,14 @@
                     <input asp-for="RememberMe" type="checkbox" />
                     <label asp-for="RememberMe">Remember me</label>
                 </div>
-                <a href="/Account/ForgotPassword.html" class="auth-link">Forgot Password?</a>
+                <a href="/Account/ForgotPassword" class="auth-link">Forgot Password?</a>
             </div>
 
-            <button type="submit" class="auth-submit-btn" onclick="window.location.href='/Catalogue/Index.cshtml'">LOG IN</button>
+            <button type="submit" class="auth-submit-btn">LOG IN</button>
         </form>
 
         <div class="auth-signup-link">
-            Don't have an account? <a asp-action="Register" href="/Account/Register.cshtml" class="auth-link">SIGN UP</a>
+            Don't have an account? <a asp-action="Register" href="/Account/Register" class="auth-link">SIGN UP</a>
         </div>
 
         <div class="auth-divider">Or</div>

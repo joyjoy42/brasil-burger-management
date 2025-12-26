@@ -115,7 +115,7 @@
         <div class="col-12">
             @if (User.Identity.IsAuthenticated)
             {
-                <form method="post" action="/Commande/DetailsBurger.cshtml/AjouterAuPanier" id="addToCartForm">
+                <form method="post" action="/Commande/AjouterAuPanier" id="addToCartForm">
                     <input type="hidden" name="type" value="burger" />
                     <input type="hidden" name="id" value="@Model.Burger.Id" />
                     <input type="hidden" name="quantite" id="hiddenQuantity" value="1" />
