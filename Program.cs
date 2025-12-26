@@ -70,39 +70,42 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<AppDbContext>();
     context.Database.EnsureCreated();
 
-    // REPAIR STEP: Fix existing bad URLs from previous runs
-    // Check if any entity has the double URL pattern
-    var badBurgers = context.Burgers.Where(b => b.Image.StartsWith("https://res.cloudinary.com") && b.Image.Contains("/https://")).ToList();
-    if (badBurgers.Any())
+    // REPAIR STEP: Fix any existing bad URLs in the database
+    // This runs on every startup to ensure data is clean
+    var burgersToFix = context.Burgers.Where(b => b.Image != null && b.Image.Contains("https://res.cloudinary.com") && b.Image.Contains("/https://")).ToList();
+    foreach (var b in burgersToFix)
     {
-        foreach (var b in badBurgers)
+        var parts = b.Image.Split(new[] { "/https://" }, StringSplitOptions.None);
+        if (parts.Length > 1)
         {
-            var parts = b.Image.Split(new[] { "/https://" }, StringSplitOptions.None);
-            if (parts.Length > 1) { b.Image = "https://" + parts[1]; }
+            b.Image = "https://" + parts.Last();
         }
-        context.SaveChanges();
     }
 
-    var badMenus = context.Menus.Where(m => m.Image.StartsWith("https://res.cloudinary.com") && m.Image.Contains("/https://")).ToList();
-    if (badMenus.Any())
+    var menusToFix = context.Menus.Where(m => m.Image != null && m.Image.Contains("https://res.cloudinary.com") && m.Image.Contains("/https://")).ToList();
+    foreach (var m in menusToFix)
     {
-        foreach (var m in badMenus)
+        var parts = m.Image.Split(new[] { "/https://" }, StringSplitOptions.None);
+        if (parts.Length > 1)
         {
-            var parts = m.Image.Split(new[] { "/https://" }, StringSplitOptions.None);
-            if (parts.Length > 1) { m.Image = "https://" + parts[1]; }
+            m.Image = "https://" + parts.Last();
         }
-        context.SaveChanges();
     }
 
-    var badComplements = context.Complements.Where(c => c.Image.StartsWith("https://res.cloudinary.com") && c.Image.Contains("/https://")).ToList();
-    if (badComplements.Any())
+    var complementsToFix = context.Complements.Where(c => c.Image != null && c.Image.Contains("https://res.cloudinary.com") && c.Image.Contains("/https://")).ToList();
+    foreach (var c in complementsToFix)
     {
-        foreach (var c in badComplements)
+        var parts = c.Image.Split(new[] { "/https://" }, StringSplitOptions.None);
+        if (parts.Length > 1)
         {
-            var parts = c.Image.Split(new[] { "/https://" }, StringSplitOptions.None);
-            if (parts.Length > 1) { c.Image = "https://" + parts[1]; }
+            c.Image = "https://" + parts.Last();
         }
+    }
+    
+    if (burgersToFix.Any() || menusToFix.Any() || complementsToFix.Any())
+    {
         context.SaveChanges();
+        Console.WriteLine("REPAIRED DB IMAGES");
     }
 
     if (!context.Burgers.Any())

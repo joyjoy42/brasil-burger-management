@@ -147,7 +147,7 @@ namespace BrasilBurger.Web.Controllers
                 TempData["SuccessMessage"] = $"Inscription réussie ! Bienvenue {client.Prenom} {client.Nom} ! Vous avez maintenant accès à toutes les fonctionnalités.";
                 
                 // Redirection explicite vers le catalogue
-                return Redirect("/Catalogue");
+                return RedirectToAction("Index", "Catalogue");
             }
             catch (Exception ex)
             {
