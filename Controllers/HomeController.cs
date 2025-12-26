@@ -6,7 +6,7 @@ namespace BrasilBurger.Web.Controllers
     {
         public IActionResult Index()
         {
-            return RedirectToAction("Index", "Catalogue");
+            return View();
         }
 
         public IActionResult Error(int? statusCode = null)

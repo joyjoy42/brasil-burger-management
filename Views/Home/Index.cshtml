@@ -21,22 +21,22 @@
         <div class="action-buttons">
             @if (User.Identity.IsAuthenticated)
             {
-                <a href="/Catalogue" class="btn btn-home btn-home-primary">
+                <a asp-controller="Catalogue" asp-action="Index" class="btn btn-home btn-home-primary">
                     <i class="fas fa-utensils"></i> Voir le Catalogue
                 </a>
-                <a href="/Commande/Panier" class="btn btn-home btn-home-outline">
+                <a asp-controller="Commande" asp-action="Panier" class="btn btn-home btn-home-outline">
                     <i class="fas fa-shopping-cart"></i> Mon Panier
                 </a>
             }
             else
             {
-                <a href="/Catalogue" class="btn btn-home btn-home-primary">
+                <a asp-controller="Catalogue" asp-action="Index" class="btn btn-home btn-home-primary">
                     <i class="fas fa-utensils"></i> Voir le Catalogue
                 </a>
-                <a href="/Account/Login" class="btn btn-home btn-home-outline">
+                <a asp-controller="Account" asp-action="Login" class="btn btn-home btn-home-outline">
                     <i class="fas fa-sign-in-alt"></i> Se Connecter
                 </a>
-                <a href="/Account/Register" class="btn btn-home btn-home-outline">
+                <a asp-controller="Account" asp-action="Register" class="btn btn-home btn-home-outline">
                     <i class="fas fa-user-plus"></i> S'inscrire
                 </a>
             }
