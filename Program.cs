@@ -14,16 +14,25 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // DbContext - PostgreSQL (Neon)
+// DbContext - PostgreSQL with Fallback to SQLite
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-if (!string.IsNullOrEmpty(connectionString))
+
+// Always register the DbContext so DI doesn't fail
+builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    builder.Services.AddDbContext<AppDbContext>(options =>
+    if (!string.IsNullOrEmpty(connectionString))
     {
+        // Production / PostgreSQL
         options.UseNpgsql(connectionString);
-        // PostgreSQL requires UTC timestamps
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-    });
-}
+    }
+    else
+    {
+        // Fallback: Use SQLite (ensure app runs even without config)
+        Console.WriteLine("WARNING: DefaultConnection not found. Falling back to SQLite.");
+        options.UseSqlite("Data Source=brasilburger.db");
+    }
+});
 
 // Authentication - cookies
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
