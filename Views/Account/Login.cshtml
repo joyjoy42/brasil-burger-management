@@ -10,7 +10,7 @@
 
 <div class="auth-page">
     <div class="auth-top-section">
-        <a href="/" class="auth-back-btn">
+        <a asp-controller="Home" asp-action="Index" class="auth-back-btn">
             <i class="fas fa-arrow-left"></i>
         </a>
         <h1 class="auth-title">Log In</h1>
@@ -52,7 +52,7 @@
         </form>
 
         <div class="auth-signup-link">
-            Don't have an account? <a asp-action="Register" href="/Account/Register" class="auth-link">SIGN UP</a>
+            Don't have an account? <a asp-controller="Account" asp-action="Register" class="auth-link">SIGN UP</a>
         </div>
 
         <div class="auth-divider">Or</div>
