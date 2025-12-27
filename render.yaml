@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: brasil-burger-manager
+    plan: free
+    dockerfilePath: BrasilBurger_Symfony/Dockerfile
+    dockerContext: BrasilBurger_Symfony
+    envVars:
+      - key: DATABASE_URL
+        fromConfig: DATABASE_URL
+      - key: APP_SECRET
+        generateValue: true
+      - key: APP_ENV
+        value: prod
