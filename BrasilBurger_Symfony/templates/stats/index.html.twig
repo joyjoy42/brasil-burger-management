@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques - Brasil Burger Admin{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse shadow-sm">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_dashboard') }}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_order_index') }}"><i class="bi bi-bag"></i> Commandes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_delivery_index') }}"><i class="bi bi-truck"></i> Livraisons</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ path('app_stats_index') }}"><i class="bi bi-graph-up"></i> Statistiques</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Rapports & Statistiques</h1>
+            </div>
+
+            <div class="row">
+                <!-- Revenue Chart (Simplified list for now) -->
+                <div class="col-md-8 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white"><h5 class="mb-0">Revenus des 7 derniers jours</h5></div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-end gap-3 h-100" style="min-height: 200px;">
+                                {% for day in weekly_revenue %}
+                                    <div class="text-center flex-grow-1">
+                                        <div class="bg-primary rounded-top" style="height: {{ day.value / 1000 }}px; min-height: 5px;" title="{{ day.value }} FCFA"></div>
+                                        <div class="small mt-2">{{ day.label }}</div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Sellers -->
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white"><h5 class="mb-0">Top Burgers</h5></div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                {% for burger in top_burgers %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ burger.name }}
+                                        <span class="badge bg-success rounded-pill">{{ burger.total }} vendus</span>
+                                    </li>
+                                {% else %}
+                                    <li class="list-group-item text-muted">Aucune donnée de vente.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Distribution -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white"><h5 class="mb-0">Répartition des statuts</h5></div>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead><tr><th>Statut</th><th>Nombre</th></tr></thead>
+                                <tbody>
+                                    {% for row in status_distribution %}
+                                        <tr>
+                                            <td><span class="badge bg-secondary">{{ row.status|capitalize }}</span></td>
+                                            <td>{{ row.total }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
