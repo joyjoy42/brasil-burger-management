@@ -19,10 +19,12 @@ RUN apt-get update && apt-get install -y \
     supervisor \
     && rm -rf /var/lib/apt/lists/*
 
-# Configure GD extension
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+# Verify PostgreSQL headers are installed and configure pdo_pgsql with explicit path
+RUN find /usr -name "libpq-fe.h" 2>/dev/null || echo "libpq-fe.h not found" \
+    && docker-php-ext-configure pdo_pgsql --with-pgsql=/usr \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg
 
-# Install PHP extensions (pdo_pgsql needs libpq-dev which is installed above)
+# Install PHP extensions
 RUN docker-php-ext-install -j$(nproc) \
         pdo_pgsql \
         mbstring \
