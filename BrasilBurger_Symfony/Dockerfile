@@ -1,7 +1,7 @@
 # Dockerfile for Brasil Burger Symfony Application
 FROM php:8.4-fpm
 
-# Install system dependencies and PECL
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -17,14 +17,15 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     libpq-dev \
     supervisor \
-    pecl \
     && rm -rf /var/lib/apt/lists/*
 
 # Configure GD extension
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
-# Install PHP extensions (excluding pdo_pgsql which will be installed via PECL)
+# Install PHP extensions (pdo_pgsql is part of PDO, needs libpq-dev)
 RUN docker-php-ext-install -j$(nproc) \
+        pdo \
+        pdo_pgsql \
         mbstring \
         exif \
         pcntl \
@@ -32,10 +33,6 @@ RUN docker-php-ext-install -j$(nproc) \
         gd \
         zip \
         opcache
-
-# Install pdo_pgsql using PECL
-RUN pecl install pdo_pgsql \
-    && docker-php-ext-enable pdo_pgsql
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
