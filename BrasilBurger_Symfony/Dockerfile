@@ -1,7 +1,7 @@
 # Dockerfile for Brasil Burger Symfony Application
 FROM php:8.3-fpm
 
-# Install system dependencies
+# Install system dependencies including PostgreSQL server development packages
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     nginx \
     postgresql-client \
+    postgresql-server-dev-15 \
     libpq-dev \
     supervisor \
     && rm -rf /var/lib/apt/lists/*
