@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     nginx \
     postgresql-client \
-    postgresql-server-dev-15 \
+    postgresql-server-dev-all \
     libpq-dev \
     supervisor \
     && rm -rf /var/lib/apt/lists/*
