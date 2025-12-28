@@ -1,5 +1,5 @@
 # Dockerfile for Brasil Burger Symfony Application
-FROM php:8.4-fpm
+FROM php:8.3-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
 # Configure GD extension
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
-# Install PHP extensions (pdo_pgsql is part of PDO, needs libpq-dev)
+# Install PHP extensions
 RUN docker-php-ext-install -j$(nproc) \
         pdo \
         pdo_pgsql \
