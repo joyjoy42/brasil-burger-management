@@ -1,7 +1,7 @@
 # Dockerfile for Brasil Burger Symfony Application
 FROM php:8.4-fpm
 
-# Install system dependencies
+# Install system dependencies and PostgreSQL client libraries
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -15,8 +15,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     nginx \
     postgresql-client \
-    supervisor \
     libpq-dev \
+    supervisor \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd zip opcache \
     && apt-get clean \
