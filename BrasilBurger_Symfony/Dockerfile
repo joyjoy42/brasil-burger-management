@@ -1,7 +1,7 @@
 # Dockerfile for Brasil Burger Symfony Application
 FROM php:8.3-fpm
 
-# Install system dependencies including PostgreSQL server development packages
+# Install system dependencies and PHP extensions in one step to ensure dependencies are available
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -17,13 +17,8 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     libpq-dev \
     supervisor \
-    && rm -rf /var/lib/apt/lists/*
-
-# Configure GD extension
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-
-# Install PHP extensions
-RUN docker-php-ext-install -j$(nproc) \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) \
         pdo \
         pdo_pgsql \
         mbstring \
@@ -32,7 +27,9 @@ RUN docker-php-ext-install -j$(nproc) \
         bcmath \
         gd \
         zip \
-        opcache
+        opcache \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
