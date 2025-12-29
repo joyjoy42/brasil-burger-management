@@ -44,3 +44,4 @@ EXPOSE 80
 # Start nginx and php-fpm
 CMD service php8.2-fpm start && nginx -g "daemon off;"
 
+

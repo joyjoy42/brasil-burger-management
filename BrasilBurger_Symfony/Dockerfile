@@ -1,7 +1,7 @@
 # Dockerfile for Brasil Burger Symfony Application
 FROM php:8.3-fpm
 
-# Install system dependencies and PHP extensions in one step to ensure dependencies are available
+# Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     libpq-dev \
     supervisor \
+    gettext-base \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
         pdo \
@@ -51,38 +52,20 @@ RUN mkdir -p /var/www/html/var/cache /var/www/html/var/log \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/var
 
+# Run Symfony setup commands
+RUN php bin/console cache:clear --env=prod \
+    && php bin/console cache:warmup --env=prod \
+    && php bin/console assets:install public --env=prod
+
 # Configure PHP
 RUN echo "upload_max_filesize = 20M" >> /usr/local/etc/php/conf.d/uploads.ini \
     && echo "post_max_size = 20M" >> /usr/local/etc/php/conf.d/uploads.ini \
     && echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/uploads.ini
 
-# Configure nginx for Symfony (using port 8080 by default, Render will use PORT env var)
-RUN echo 'server { \
-    listen 8080; \
-    server_name _; \
-    root /var/www/html/public; \
-    index index.php; \
-    client_max_body_size 20M; \
-    \
-    location / { \
-        try_files $uri $uri/ /index.php?$query_string; \
-    } \
-    \
-    location ~ \.php$ { \
-        fastcgi_pass 127.0.0.1:9000; \
-        fastcgi_index index.php; \
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; \
-        include fastcgi_params; \
-        fastcgi_read_timeout 300; \
-    } \
-    \
-    location ~ /\.ht { \
-        deny all; \
-    } \
-}' > /etc/nginx/sites-available/default \
-    && ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+# Copy nginx template
+COPY nginx.conf.template /etc/nginx/nginx.conf.template
 
-# Configure supervisor to run nginx and php-fpm
+# Configure supervisor
 RUN echo '[supervisord] \
 nodaemon=true \
 \
@@ -96,8 +79,15 @@ command=/usr/sbin/nginx -g "daemon off;" \
 autostart=true \
 autorestart=true' > /etc/supervisor/conf.d/supervisord.conf
 
+# Create startup script
+RUN echo '#!/bin/bash \
+envsubst < /etc/nginx/nginx.conf.template > /etc/nginx/sites-available/default \
+ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default \
+exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf' > /start.sh \
+    && chmod +x /start.sh
+
 # Expose port
 EXPOSE 8080
 
-# Start supervisor to manage nginx and php-fpm
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Start with our custom script
+CMD ["/start.sh"]

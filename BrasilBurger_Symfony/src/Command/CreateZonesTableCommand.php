@@ -59,3 +59,4 @@ class CreateZonesTableCommand extends Command
     }
 }
 
+

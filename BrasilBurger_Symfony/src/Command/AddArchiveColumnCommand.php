@@ -55,3 +55,4 @@ class AddArchiveColumnCommand extends Command
     }
 }
 
+

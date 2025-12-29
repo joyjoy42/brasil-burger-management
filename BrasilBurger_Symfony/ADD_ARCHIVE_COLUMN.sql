@@ -3,3 +3,4 @@
 
 ALTER TABLE burgers ADD COLUMN archive BOOLEAN NOT NULL DEFAULT false;
 
+

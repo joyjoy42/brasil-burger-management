@@ -60,3 +60,4 @@ try {
     echo "<hr><details open><summary>Debug Log</summary><pre>" . implode("\n", $log) . "</pre></details>";
 }
 
+

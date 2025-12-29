@@ -3,3 +3,4 @@
 
 ALTER TABLE commandes ADD COLUMN IF NOT EXISTS date_modification TIMESTAMP NULL;
 
+
