@@ -23,10 +23,6 @@ RUN apt-get update && apt-get install -y \
         pdo \
         pdo_pgsql \
         mbstring \
-        exif \
-        pcntl \
-        bcmath \
-        gd \
         zip \
         opcache \
     && apt-get clean \
