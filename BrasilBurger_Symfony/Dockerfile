@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     libpq-dev \
+    postgresql-client \
     zip \
     unzip \
     nginx \
