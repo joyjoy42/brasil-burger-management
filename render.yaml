@@ -1,12 +1,13 @@
 services:
   - type: web
-    name: brasil-burger-manager
+    name: brasil-burger-symfony
     plan: free
+    runtime: docker
     dockerfilePath: ./BrasilBurger_Symfony/Dockerfile
     dockerContext: ./BrasilBurger_Symfony
     envVars:
       - key: DATABASE_URL
-        fromConfig: DATABASE_URL
+        value: postgresql://neondb_owner:npg_Q28lkcThzxRG@ep-withered-surf-a4zfsqbd-pooler.us-east-1.aws.neon.tech:5432/neondb?sslmode=require&serverVersion=16&charset=utf8
       - key: APP_SECRET
         generateValue: true
       - key: APP_ENV
