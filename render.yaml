@@ -2,7 +2,7 @@ services:
   - type: web
     name: brasil-burger-manager
     plan: free
-    dockerfilePath: BrasilBurger_Symfony/Dockerfile
+    dockerfilePath: Dockerfile
     dockerContext: BrasilBurger_Symfony
     envVars:
       - key: DATABASE_URL
