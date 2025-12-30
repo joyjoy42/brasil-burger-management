@@ -18,8 +18,14 @@ class OrderController extends AbstractController
     {
         $status = $request->query->get('status');
         $date = $request->query->get('date');
+        $client = $request->query->get('client');
+        $product = $request->query->get('product'); // burger or menu name
 
         $queryBuilder = $orderRepository->createQueryBuilder('o')
+            ->leftJoin('o.user', 'u')
+            ->leftJoin('o.orderItems', 'oi')
+            ->leftJoin('oi.burger', 'b')
+            ->leftJoin('oi.menu', 'm')
             ->orderBy('o.createdAt', 'DESC');
 
         if ($status) {
@@ -32,12 +38,24 @@ class OrderController extends AbstractController
                 ->setParameter('date', $date . '%');
         }
 
+        if ($client) {
+            $queryBuilder->andWhere('u.nom LIKE :client OR u.prenom LIKE :client')
+                ->setParameter('client', '%' . $client . '%');
+        }
+
+        if ($product) {
+            $queryBuilder->andWhere('b.nom LIKE :product OR m.nom LIKE :product')
+                ->setParameter('product', '%' . $product . '%');
+        }
+
         $orders = $queryBuilder->getQuery()->getResult();
 
         return $this->render('order/index.html.twig', [
             'orders' => $orders,
             'current_status' => $status,
             'current_date' => $date,
+            'current_client' => $client,
+            'current_product' => $product,
         ]);
     }
 

@@ -14,7 +14,76 @@ class StatsController extends AbstractController
     #[Route('', name: 'app_stats_index', methods: ['GET'])]
     public function index(OrderRepository $orderRepository, OrderItemRepository $itemRepository): Response
     {
-        // 1. Weekly Revenue
+        $today = new \DateTime('today');
+        $tomorrow = new \DateTime('tomorrow');
+
+        // Required daily statistics from cahier de charge
+        // 1. Commandes en cours de la journée
+        $ordersInProgress = $orderRepository->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
+            ->where('o.createdAt >= :today')
+            ->andWhere('o.createdAt < :tomorrow')
+            ->andWhere('o.status IN (:statuses)')
+            ->setParameter('today', $today)
+            ->setParameter('tomorrow', $tomorrow)
+            ->setParameter('statuses', ['en_attente', 'valide'])
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // 2. Commandes validées de la journée
+        $validatedOrders = $orderRepository->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
+            ->where('o.createdAt >= :today')
+            ->andWhere('o.createdAt < :tomorrow')
+            ->andWhere('o.status = :status')
+            ->setParameter('today', $today)
+            ->setParameter('tomorrow', $tomorrow)
+            ->setParameter('status', 'valide')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // 3. Recettes journalières
+        $dailyRevenue = $orderRepository->createQueryBuilder('o')
+            ->select('SUM(o.totalAmount)')
+            ->where('o.createdAt >= :today')
+            ->andWhere('o.createdAt < :tomorrow')
+            ->andWhere('o.status != :cancelled')
+            ->setParameter('today', $today)
+            ->setParameter('tomorrow', $tomorrow)
+            ->setParameter('cancelled', 'annule')
+            ->getQuery()
+            ->getSingleScalarResult() ?? 0;
+
+        // 4. Burgers au menu les plus vendus de la journée
+        $topBurgersToday = $itemRepository->createQueryBuilder('it')
+            ->select('b.name as name, SUM(it.quantity) as total')
+            ->join('it.order', 'o')
+            ->join('it.burger', 'b')
+            ->where('o.createdAt >= :today')
+            ->andWhere('o.createdAt < :tomorrow')
+            ->andWhere('o.status != :cancelled')
+            ->groupBy('b.id')
+            ->orderBy('total', 'DESC')
+            ->setParameter('today', $today)
+            ->setParameter('tomorrow', $tomorrow)
+            ->setParameter('cancelled', 'annule')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+
+        // 5. Commandes annulées du jour
+        $cancelledOrders = $orderRepository->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
+            ->where('o.createdAt >= :today')
+            ->andWhere('o.createdAt < :tomorrow')
+            ->andWhere('o.status = :status')
+            ->setParameter('today', $today)
+            ->setParameter('tomorrow', $tomorrow)
+            ->setParameter('status', 'annule')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Weekly Revenue for chart
         $last7Days = [];
         for ($i = 6; $i >= 0; $i--) {
             $date = new \DateTime("-$i days");
@@ -33,27 +102,13 @@ class StatsController extends AbstractController
             $last7Days[] = ['label' => $dayName, 'value' => $revenue];
         }
 
-        // 2. Top Selling Burgers (Top 3)
-        $topBurgers = $itemRepository->createQueryBuilder('it')
-            ->select('b.name as name, SUM(it.quantity) as total')
-            ->join('it.burger', 'b')
-            ->groupBy('b.id')
-            ->orderBy('total', 'DESC')
-            ->setMaxResults(3)
-            ->getQuery()
-            ->getResult();
-
-        // 3. Status Distribution
-        $statusDistribution = $orderRepository->createQueryBuilder('o')
-            ->select('o.status, COUNT(o.id) as total')
-            ->groupBy('o.status')
-            ->getQuery()
-            ->getResult();
-
         return $this->render('stats/index.html.twig', [
+            'orders_in_progress' => $ordersInProgress,
+            'validated_orders' => $validatedOrders,
+            'daily_revenue' => $dailyRevenue,
+            'top_burgers_today' => $topBurgersToday,
+            'cancelled_orders' => $cancelledOrders,
             'weekly_revenue' => $last7Days,
-            'top_burgers' => $topBurgers,
-            'status_distribution' => $statusDistribution,
         ]);
     }
 }
