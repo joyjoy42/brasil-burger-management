@@ -2,6 +2,7 @@ services:
   - type: web
     name: brasil-burger-symfony
     plan: free
+    runtime: docker
     dockerfilePath: ./Dockerfile
     dockerContext: ./
     envVars:

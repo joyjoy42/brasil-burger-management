@@ -8,10 +8,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
+COPY composer.json composer.lock symfony.lock ./
+
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader
+RUN php bin/console cache:clear --env=prod && \
+    php bin/console cache:warmup --env=prod
 
-EXPOSE 8000
+EXPOSE ${PORT:-10000}
 
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+CMD php -S 0.0.0.0:${PORT:-10000} -t public
