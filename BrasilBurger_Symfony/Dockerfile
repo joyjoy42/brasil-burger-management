@@ -10,6 +10,7 @@ COPY . .
 RUN php bin/console cache:clear --env=prod && \
     php bin/console cache:warmup --env=prod
 
-EXPOSE 8000
+# Render uses PORT environment variable
+EXPOSE 10000
 
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+CMD php -S 0.0.0.0:${PORT:-10000} -t public
