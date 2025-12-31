@@ -3,7 +3,7 @@ services:
   brasil-burger-symfony:
     build:
       context: ./BrasilBurger_Symfony
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.simple
     container_name: brasil-burger-symfony
     restart: unless-stopped
     working_dir: /var/www/html
@@ -12,8 +12,11 @@ services:
       - ./BrasilBurger.db:/var/www/html/BrasilBurger.db
     networks:
       - brasil-burger-network
-    depends_on:
-      - nginx
+    command: >
+      sh -c "
+        composer install --no-dev --optimize-autoloader --no-interaction &&
+        php-fpm
+      "
 
   # Service Nginx
   nginx:
@@ -29,28 +32,6 @@ services:
     networks:
       - brasil-burger-network
 
-  # Service Database (SQLite est un fichier, pas besoin de service séparé)
-  # Si vous voulez utiliser MySQL ou PostgreSQL, décommentez ci-dessous:
-  # database:
-  #   image: mysql:8.0
-  #   container_name: brasil-burger-db
-  #   restart: unless-stopped
-  #   environment:
-  #     MYSQL_DATABASE: brasil_burger
-  #     MYSQL_ROOT_PASSWORD: root
-  #     MYSQL_PASSWORD: password
-  #     MYSQL_USER: brasil_burger
-  #   volumes:
-  #     - mysql_data:/var/lib/mysql
-  #   ports:
-  #     - "3306:3306"
-  #   networks:
-  #     - brasil-burger-network
-
 networks:
   brasil-burger-network:
     driver: bridge
-
-# volumes:
-#   mysql_data:
-#     driver: local
