@@ -1,0 +1,35 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+
+# Environment variables
+.env.local
+.env.prod
+
+# Dependencies
+vendor/
+node_modules/
+
+# Cache and logs
+var/cache/
+var/log/
+var/sessions/
+
+# Tests
+tests/
+phpunit.xml
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
