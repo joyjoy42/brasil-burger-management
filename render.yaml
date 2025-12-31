@@ -4,7 +4,7 @@ services:
     plan: free
     runtime: docker
     dockerContext: ./BrasilBurger_Symfony
-    dockerfilePath: ./BrasilBurger_Symfony/Dockerfile.vendor
+    dockerfilePath: ./BrasilBurger_Symfony/Dockerfile
     healthCheckPath: /login
     envVars:
       - key: DATABASE_URL
