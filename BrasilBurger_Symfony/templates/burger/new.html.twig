@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Burger - Brasil Burger{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Ajouter un nouveau burger</h1>
+        <a href="{{ path('app_burger_index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        {{ form_label(form.nom, 'Nom du burger', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.nom) }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        {{ form_label(form.prix, 'Prix (FCFA)', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.prix) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.image, 'URL de l\'image', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.image) }}
+                <small class="form-text text-muted">Laissez vide pour ne pas afficher d'image</small>
+            </div>
+
+            <div class="mb-3">
+                <div class="form-check">
+                    {{ form_widget(form.archive, {'attr': {'class': 'form-check-input'}}) }}
+                    {{ form_label(form.archive, 'Archiver ce burger', {'label_attr': {'class': 'form-check-label'}}) }}
+                    {{ form_errors(form.archive) }}
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="{{ path('app_burger_index') }}" class="btn btn-secondary">
+                    <i class="fas fa-cancel"></i> Annuler
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Enregistrer
+                </button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

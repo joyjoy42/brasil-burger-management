@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord - Brasil Burger{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Tableau de bord</h1>
+    <p class="text-muted">Bienvenue {{ app.user.prenom }} {{ app.user.nom }} dans le système de gestion Brasil Burger</p>
+
+    <!-- Statistiques du jour -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>{{ commandes_en_cours_du_jour }}</h4>
+                            <p class="mb-0">Commandes en cours</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>{{ commandes_validees_du_jour }}</h4>
+                            <p class="mb-0">Commandes validées</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>{{ commandes_annulees_du_jour }}</h4>
+                            <p class="mb-0">Commandes annulées</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-times-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>{{ recettes_journalieres|number_format(0, ',', ' ') }} FCFA</h4>
+                            <p class="mb-0">Recettes du jour</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-money-bill-wave fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Burgers les plus vendus -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Burgers les plus vendus aujourd'hui</h5>
+                </div>
+                <div class="card-body">
+                    {% if burgers_plus_vendus is not empty %}
+                        {% for burger in burgers_plus_vendus %}
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span>{{ burger.nom }}</span>
+                                <span class="badge bg-primary">{{ burger.totalVentes }} ventes</span>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">Aucune vente aujourd'hui</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Dernières commandes -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Dernières commandes</h5>
+                </div>
+                <div class="card-body">
+                    {% if dernieres_commandes is not empty %}
+                        {% for commande in dernieres_commandes %}
+                            <div class="border-bottom pb-2 mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>Commande #{{ commande.id }}</strong><br>
+                                        <small class="text-muted">{{ commande.client.nom }} {{ commande.client.prenom }}</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-{{ commande.statut == 'annule' ? 'danger' : 'primary' }}">
+                                            {{ commande.statut|replace({'_': ' '})|title }}
+                                        </span><br>
+                                        <small>{{ commande.montantTotal|number_format(0, ',', ' ') }} FCFA</small>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">Aucune commande aujourd'hui</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Actions rapides</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <a href="{{ path('app_commande_index') }}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-list"></i> Voir toutes les commandes
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{{ path('app_burger_new') }}" class="btn btn-outline-success w-100">
+                                <i class="fas fa-plus"></i> Ajouter un burger
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{{ path('app_menu_new') }}" class="btn btn-outline-info w-100">
+                                <i class="fas fa-plus"></i> Ajouter un menu
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{{ path('app_zone_livraison_index') }}" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-map"></i> Gérer les zones
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
