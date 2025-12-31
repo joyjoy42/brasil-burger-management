@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # Service Symfony
+  brasil-burger-symfony:
+    build:
+      context: ./BrasilBurger_Symfony
+      dockerfile: Dockerfile
+    container_name: brasil-burger-symfony
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./BrasilBurger_Symfony:/var/www/html
+      - ./BrasilBurger.db:/var/www/html/BrasilBurger.db
+    networks:
+      - brasil-burger-network
+    depends_on:
+      - nginx
+
+  # Service Nginx
+  nginx:
+    image: nginx:alpine
+    container_name: brasil-burger-nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./BrasilBurger_Symfony/public:/var/www/html/public
+      - ./BrasilBurger_Symfony/uploads:/var/www/html/uploads
+    networks:
+      - brasil-burger-network
+
+  # Service Database (SQLite est un fichier, pas besoin de service séparé)
+  # Si vous voulez utiliser MySQL ou PostgreSQL, décommentez ci-dessous:
+  # database:
+  #   image: mysql:8.0
+  #   container_name: brasil-burger-db
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_DATABASE: brasil_burger
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_PASSWORD: password
+  #     MYSQL_USER: brasil_burger
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   ports:
+  #     - "3306:3306"
+  #   networks:
+  #     - brasil-burger-network
+
+networks:
+  brasil-burger-network:
+    driver: bridge
+
+# volumes:
+#   mysql_data:
+#     driver: local
