@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\CommandeItem;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @extends ServiceEntityRepository<CommandeItem>
+ *
+ * @method CommandeItem|null find($id, $lockMode = null, $lockVersion = null)
+ * @method CommandeItem|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CommandeItem[]    findAll()
+ * @method CommandeItem[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class CommandeItemRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, CommandeItem::class);
+    }
+
+    public function save(CommandeItem $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(CommandeItem $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function findBurgersLesPlusVendusDuJour(): array
+    {
+        return $this->createQueryBuilder('ci')
+            ->select('b.nom, SUM(ci.quantite) as totalVentes')
+            ->innerJoin('ci.burger', 'b')
+            ->innerJoin('ci.commande', 'c')
+            ->where('DATE(c.dateCommande) = CURRENT_DATE()')
+            ->andWhere('c.statut IN (:statuts)')
+            ->setParameter('statuts', ['valide', 'preparation', 'prete', 'termine'])
+            ->groupBy('b.id', 'b.nom')
+            ->orderBy('totalVentes', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+}
