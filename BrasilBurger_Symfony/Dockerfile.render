@@ -1,6 +1,9 @@
 # Use the official PHP image
 FROM php:8.2-fpm
 
+# Set working directory
+WORKDIR /var/www/html
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
@@ -21,31 +24,25 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Set working directory
-WORKDIR /var/www/html
-
-# Copy composer files first for better caching
+# Copy composer files first
 COPY composer.json composer.lock ./
 
-# Install PHP dependencies with error handling
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist || \
-    (echo "Composer install failed, trying alternative approach..." && \
-     composer install --no-dev --optimize-autoloader --no-interaction --prefer-source)
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Copy the rest of the application
+# Copy application files
 COPY . .
 
-# Create necessary directories and set permissions
-RUN mkdir -p var/cache var/log public/uploads \
-    && chown -R www-data:www-data /var/www/html \
+# Create necessary directories
+RUN mkdir -p var/cache var/log public/uploads
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
     && chmod -R 777 /var/www/html/var \
     && chmod -R 777 /var/www/html/public/uploads
-
-# Clear cache
-RUN php bin/console cache:clear --env=prod || true
 
 # Expose port
 EXPOSE 9000
