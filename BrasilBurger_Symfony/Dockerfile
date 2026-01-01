@@ -38,6 +38,9 @@ COPY . .
 # Create necessary directories
 RUN mkdir -p var/cache var/log public/uploads
 
+# Ensure Render entrypoint is executable
+RUN chmod +x bin/render-entrypoint.sh
+
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
@@ -50,5 +53,5 @@ RUN rm -rf var/cache/* || true
 # Expose port
 EXPOSE 10000
 
-# Render provides PORT; use PHP built-in server for simplicity
-CMD ["sh", "-c", "php -S 0.0.0.0:${PORT:-10000} -t public"]
+# Render entrypoint: initialize SQLite DB on /var/data then start server
+CMD ["bin/render-entrypoint.sh"]
