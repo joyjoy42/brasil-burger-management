@@ -1,16 +1,22 @@
 #!/usr/bin/env sh
 set -eu
 
-DB_PATH="/var/www/html/var/BrasilBurger.db"
-SQL_PATH="/var/www/html/database.sql"
+DATABASE_URL_VALUE="${DATABASE_URL:-}"
 
-mkdir -p /var/www/html/var
+if echo "$DATABASE_URL_VALUE" | grep -qi "^postgres"; then
+  php bin/console doctrine:schema:update --force --env=prod --no-interaction || true
+elif echo "$DATABASE_URL_VALUE" | grep -qi "^sqlite"; then
+  DB_PATH="/var/www/html/var/BrasilBurger.db"
+  SQL_PATH="/var/www/html/database.sql"
 
-if [ ! -f "$DB_PATH" ] || [ ! -s "$DB_PATH" ]; then
-  if [ -f "$SQL_PATH" ]; then
-    sqlite3 "$DB_PATH" < "$SQL_PATH"
-  else
-    sqlite3 "$DB_PATH" "VACUUM;"
+  mkdir -p /var/www/html/var
+
+  if [ ! -f "$DB_PATH" ] || [ ! -s "$DB_PATH" ]; then
+    if [ -f "$SQL_PATH" ]; then
+      sqlite3 "$DB_PATH" < "$SQL_PATH"
+    else
+      sqlite3 "$DB_PATH" "VACUUM;"
+    fi
   fi
 fi
 

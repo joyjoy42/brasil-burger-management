@@ -1,3 +1,7 @@
+databases:
+  - name: brasil-burger-db
+    plan: free
+
 services:
   - type: web
     name: brasil-burger-symfony
@@ -8,7 +12,9 @@ services:
     healthCheckPath: /login
     envVars:
       - key: DATABASE_URL
-        value: sqlite:////var/www/html/var/BrasilBurger.db
+        fromDatabase:
+          name: brasil-burger-db
+          property: connectionString
       - key: APP_SECRET
         generateValue: true
       - key: APP_ENV
