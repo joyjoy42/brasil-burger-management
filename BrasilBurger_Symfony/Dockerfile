@@ -23,6 +23,9 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Set working directory
+WORKDIR /var/www/html
+
 # Copy composer files first for better caching
 COPY composer.json composer.lock ./
 
@@ -31,9 +34,6 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 
 # Copy application files
 COPY . .
-
-# Set working directory
-WORKDIR /var/www/html
 
 # Create necessary directories
 RUN mkdir -p var/cache var/log public/uploads
