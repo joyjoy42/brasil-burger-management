@@ -1,10 +1,10 @@
 #!/usr/bin/env sh
 set -eu
 
-DB_PATH="/var/data/BrasilBurger.db"
+DB_PATH="/var/www/html/var/BrasilBurger.db"
 SQL_PATH="/var/www/html/database.sql"
 
-mkdir -p /var/data
+mkdir -p /var/www/html/var
 
 if [ ! -f "$DB_PATH" ] || [ ! -s "$DB_PATH" ]; then
   if [ -f "$SQL_PATH" ]; then

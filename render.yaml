@@ -8,7 +8,7 @@ services:
     healthCheckPath: /login
     envVars:
       - key: DATABASE_URL
-        value: sqlite:////var/data/BrasilBurger.db
+        value: sqlite:////var/www/html/var/BrasilBurger.db
       - key: APP_SECRET
         generateValue: true
       - key: APP_ENV
@@ -17,7 +17,3 @@ services:
         value: "127.0.0.1,REMOTE_ADDR"
       - key: TRUSTED_HOSTS
         value: "^.*$"
-    disk:
-      name: brasil-burger-disk
-      mountPath: /var/data
-      sizeGB: 1
