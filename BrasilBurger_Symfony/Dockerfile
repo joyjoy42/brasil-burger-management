@@ -1,5 +1,5 @@
 # Use the official PHP image
-FROM php:8.2-fpm
+FROM php:8.4-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -20,11 +20,20 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Copy composer files first for better caching
+COPY composer.json composer.lock ./
+
+# Install dependencies (avoid Symfony auto-scripts during image build)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --prefer-dist --no-scripts
+
+# Copy application files
+COPY . .
+
 # Set working directory
 WORKDIR /var/www/html
-
-# Copy application files including vendor directory
-COPY . .
 
 # Create necessary directories
 RUN mkdir -p var/cache var/log public/uploads
@@ -35,11 +44,11 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 777 /var/www/html/var \
     && chmod -R 777 /var/www/html/public/uploads
 
-# Clear cache manually
+# Clear cache (best-effort)
 RUN rm -rf var/cache/* || true
 
 # Expose port
-EXPOSE 9000
+EXPOSE 10000
 
-# Start PHP-FPM
-CMD ["php-fpm"]
+# Render provides PORT; use PHP built-in server for simplicity
+CMD ["sh", "-c", "php -S 0.0.0.0:${PORT:-10000} -t public"]

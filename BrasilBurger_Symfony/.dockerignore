@@ -9,6 +9,10 @@ README.md
 .env.local
 .env.prod
 
+ # Dependencies
+ vendor/
+ node_modules/
+
 # Cache and logs
 var/cache/
 var/log/

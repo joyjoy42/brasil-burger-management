@@ -4,11 +4,11 @@ services:
     plan: free
     runtime: docker
     dockerContext: ./BrasilBurger_Symfony
-    dockerfilePath: ./BrasilBurger_Symfony/Dockerfile.render3
+    dockerfilePath: ./BrasilBurger_Symfony/Dockerfile
     healthCheckPath: /login
     envVars:
       - key: DATABASE_URL
-        value: sqlite:///var/www/html/BrasilBurger.db
+        value: sqlite:////var/data/BrasilBurger.db
       - key: APP_SECRET
         generateValue: true
       - key: APP_ENV
@@ -19,5 +19,5 @@ services:
         value: "^.*$"
     disk:
       name: brasil-burger-disk
-      mountPath: /var/www/html
+      mountPath: /var/data
       sizeGB: 1
