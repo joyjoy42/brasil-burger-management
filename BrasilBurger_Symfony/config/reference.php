@@ -261,7 +261,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         formats?: array<string, string|list<scalar|null|Param>>,
  *     },
  *     assets?: bool|array{ // Assets configuration
- *         enabled?: bool|Param, // Default: false
+ *         enabled?: bool|Param, // Default: true
  *         strict_mode?: bool|Param, // Throw an exception if an entry is missing from the manifest.json. // Default: false
  *         version_strategy?: scalar|null|Param, // Default: null
  *         version?: scalar|null|Param, // Default: null
@@ -867,30 +867,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         resolve_target_entities?: array<string, scalar|null|Param>,
  *     },
  * }
- * @psalm-type DoctrineMigrationsConfig = array{
- *     enable_service_migrations?: bool|Param, // Whether to enable fetching migrations from the service container. // Default: false
- *     migrations_paths?: array<string, scalar|null|Param>,
- *     services?: array<string, scalar|null|Param>,
- *     factories?: array<string, scalar|null|Param>,
- *     storage?: array{ // Storage to use for migration status metadata.
- *         table_storage?: array{ // The default metadata storage, implemented as a table in the database.
- *             table_name?: scalar|null|Param, // Default: null
- *             version_column_name?: scalar|null|Param, // Default: null
- *             version_column_length?: scalar|null|Param, // Default: null
- *             executed_at_column_name?: scalar|null|Param, // Default: null
- *             execution_time_column_name?: scalar|null|Param, // Default: null
- *         },
- *     },
- *     migrations?: list<scalar|null|Param>,
- *     connection?: scalar|null|Param, // Connection name to use for the migrations database. // Default: null
- *     em?: scalar|null|Param, // Entity manager name to use for the migrations database (available when doctrine/orm is installed). // Default: null
- *     all_or_nothing?: scalar|null|Param, // Run all migrations in a transaction. // Default: false
- *     check_database_platform?: scalar|null|Param, // Adds an extra check in the generated migrations to allow execution only on the same platform as they were initially generated on. // Default: true
- *     custom_template?: scalar|null|Param, // Custom template path for generated migration classes. // Default: null
- *     organize_migrations?: scalar|null|Param, // Organize migrations mode. Possible values are: "BY_YEAR", "BY_YEAR_AND_MONTH", false // Default: false
- *     enable_profiler?: bool|Param, // Whether or not to enable the profiler collector to calculate and visualize migration status. This adds some queries overhead. // Default: false
- *     transactional?: bool|Param, // Whether or not to wrap migrations in a single transaction. // Default: true
- * }
  * @psalm-type SecurityConfig = array{
  *     access_denied_url?: scalar|null|Param, // Default: null
  *     session_fixation_strategy?: "none"|"migrate"|"invalidate"|Param, // Default: "migrate"
@@ -1231,18 +1207,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         html_to_text_converter?: scalar|null|Param, // A service implementing the "Symfony\Component\Mime\HtmlToTextConverter\HtmlToTextConverterInterface". // Default: null
  *     },
  * }
- * @psalm-type MakerConfig = array{
- *     root_namespace?: scalar|null|Param, // Default: "App"
- *     generate_final_classes?: bool|Param, // Default: true
- *     generate_final_entities?: bool|Param, // Default: false
- * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
  *     services?: ServicesConfig,
  *     framework?: FrameworkConfig,
  *     doctrine?: DoctrineConfig,
- *     doctrine_migrations?: DoctrineMigrationsConfig,
  *     security?: SecurityConfig,
  *     twig?: TwigConfig,
  *     "when@dev"?: array{
@@ -1251,10 +1221,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         services?: ServicesConfig,
  *         framework?: FrameworkConfig,
  *         doctrine?: DoctrineConfig,
- *         doctrine_migrations?: DoctrineMigrationsConfig,
  *         security?: SecurityConfig,
  *         twig?: TwigConfig,
- *         maker?: MakerConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1262,7 +1230,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         services?: ServicesConfig,
  *         framework?: FrameworkConfig,
  *         doctrine?: DoctrineConfig,
- *         doctrine_migrations?: DoctrineMigrationsConfig,
  *         security?: SecurityConfig,
  *         twig?: TwigConfig,
  *     },
@@ -1272,7 +1239,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         services?: ServicesConfig,
  *         framework?: FrameworkConfig,
  *         doctrine?: DoctrineConfig,
- *         doctrine_migrations?: DoctrineMigrationsConfig,
  *         security?: SecurityConfig,
  *         twig?: TwigConfig,
  *     },

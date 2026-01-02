@@ -5,6 +5,10 @@ framework:
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
+    # Enable routing
+    router:
+        utf8: true
+
     #esi: true
     #fragments: true
 

@@ -3,11 +3,11 @@
         'name' => 'symfony/skeleton',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '860fe0286afe58ce8f57f11e5f6275d798ced18a',
+        'reference' => 'fe17f16f181a7672f42903296ef28af9a18847ef',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'dev' => false,
+        'dev' => true,
     ),
     'versions' => array(
         'doctrine/collections' => array(
@@ -127,6 +127,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'nikic/php-parser' => array(
+            'pretty_version' => 'v5.7.0',
+            'version' => '5.7.0.0',
+            'reference' => 'dca41cd15c2ac9d055ad70dbfd011130757d1f82',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../nikic/php-parser',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'psr/cache' => array(
             'pretty_version' => '3.0.0',
             'version' => '3.0.0.0',
@@ -207,6 +216,15 @@
             'provided' => array(
                 0 => '1.0|2.0|3.0',
             ),
+        ),
+        'symfony/asset' => array(
+            'pretty_version' => 'v8.0.0',
+            'version' => '8.0.0.0',
+            'reference' => 'e07d70cfca384c1eabee192fdeedb6850c1c840b',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/asset',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'symfony/cache' => array(
             'pretty_version' => 'v8.0.3',
@@ -391,6 +409,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'symfony/maker-bundle' => array(
+            'pretty_version' => 'v1.65.1',
+            'version' => '1.65.1.0',
+            'reference' => 'eba30452d212769c9a5bcf0716959fd8ba1e54e3',
+            'type' => 'symfony-bundle',
+            'install_path' => __DIR__ . '/../symfony/maker-bundle',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'symfony/options-resolver' => array(
             'pretty_version' => 'v8.0.0',
             'version' => '8.0.0.0',
@@ -514,6 +541,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'symfony/process' => array(
+            'pretty_version' => 'v8.0.0',
+            'version' => '8.0.0.0',
+            'reference' => 'a0a750500c4ce900d69ba4e9faf16f82c10ee149',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/process',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'symfony/property-access' => array(
             'pretty_version' => 'v8.0.0',
             'version' => '8.0.0.0',
@@ -604,7 +640,7 @@
         'symfony/skeleton' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '860fe0286afe58ce8f57f11e5f6275d798ced18a',
+            'reference' => 'fe17f16f181a7672f42903296ef28af9a18847ef',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
