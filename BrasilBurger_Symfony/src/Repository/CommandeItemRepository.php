@@ -41,12 +41,17 @@ class CommandeItemRepository extends ServiceEntityRepository
 
     public function findBurgersLesPlusVendusDuJour(): array
     {
+        $start = new \DateTime('today midnight');
+        $end = new \DateTime('tomorrow midnight');
+
         return $this->createQueryBuilder('ci')
             ->select('b.nom, SUM(ci.quantite) as totalVentes')
             ->innerJoin('ci.burger', 'b')
             ->innerJoin('ci.commande', 'c')
-            ->where('DATE(c.dateCommande) = CURRENT_DATE()')
+            ->where('c.dateCommande >= :start AND c.dateCommande < :end')
             ->andWhere('c.statut IN (:statuts)')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->setParameter('statuts', ['valide', 'preparation', 'prete', 'termine'])
             ->groupBy('b.id', 'b.nom')
             ->orderBy('totalVentes', 'DESC')
@@ -56,12 +61,17 @@ class CommandeItemRepository extends ServiceEntityRepository
 
     public function findMenusLesPlusVendusDuJour(): array
     {
+        $start = new \DateTime('today midnight');
+        $end = new \DateTime('tomorrow midnight');
+
         return $this->createQueryBuilder('ci')
             ->select('m.nom, SUM(ci.quantite) as totalVentes')
             ->innerJoin('ci.menu', 'm')
             ->innerJoin('ci.commande', 'c')
-            ->where('DATE(c.dateCommande) = CURRENT_DATE()')
+            ->where('c.dateCommande >= :start AND c.dateCommande < :end')
             ->andWhere('c.statut IN (:statuts)')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->setParameter('statuts', ['valide', 'preparation', 'prete', 'termine'])
             ->groupBy('m.id', 'm.nom')
             ->orderBy('totalVentes', 'DESC')

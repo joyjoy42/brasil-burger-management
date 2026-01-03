@@ -41,8 +41,13 @@ class CommandeRepository extends ServiceEntityRepository
 
     public function findCommandesDuJour(): array
     {
+        $start = new \DateTime('today midnight');
+        $end = new \DateTime('tomorrow midnight');
+
         return $this->createQueryBuilder('c')
-            ->where('DATE(c.dateCommande) = CURRENT_DATE()')
+            ->where('c.dateCommande >= :start AND c.dateCommande < :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->orderBy('c.dateCommande', 'DESC')
             ->getQuery()
             ->getResult();
@@ -50,9 +55,14 @@ class CommandeRepository extends ServiceEntityRepository
 
     public function findCommandesEnCoursDuJour(): array
     {
+        $start = new \DateTime('today midnight');
+        $end = new \DateTime('tomorrow midnight');
+
         return $this->createQueryBuilder('c')
-            ->where('DATE(c.dateCommande) = CURRENT_DATE()')
+            ->where('c.dateCommande >= :start AND c.dateCommande < :end')
             ->andWhere('c.statut IN (:statuts)')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->setParameter('statuts', ['en_attente', 'valide', 'preparation', 'prete'])
             ->orderBy('c.dateCommande', 'DESC')
             ->getQuery()
@@ -61,9 +71,14 @@ class CommandeRepository extends ServiceEntityRepository
 
     public function findCommandesValideesDuJour(): array
     {
+        $start = new \DateTime('today midnight');
+        $end = new \DateTime('tomorrow midnight');
+
         return $this->createQueryBuilder('c')
-            ->where('DATE(c.dateCommande) = CURRENT_DATE()')
+            ->where('c.dateCommande >= :start AND c.dateCommande < :end')
             ->andWhere('c.statut = :statut')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->setParameter('statut', 'valide')
             ->orderBy('c.dateCommande', 'DESC')
             ->getQuery()
@@ -72,9 +87,14 @@ class CommandeRepository extends ServiceEntityRepository
 
     public function findCommandesAnnuleesDuJour(): array
     {
+        $start = new \DateTime('today midnight');
+        $end = new \DateTime('tomorrow midnight');
+
         return $this->createQueryBuilder('c')
-            ->where('DATE(c.dateCommande) = CURRENT_DATE()')
+            ->where('c.dateCommande >= :start AND c.dateCommande < :end')
             ->andWhere('c.statut = :statut')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->setParameter('statut', 'annule')
             ->orderBy('c.dateCommande', 'DESC')
             ->getQuery()
@@ -83,10 +103,15 @@ class CommandeRepository extends ServiceEntityRepository
 
     public function findRecettesJournalieres(): float
     {
+        $start = new \DateTime('today midnight');
+        $end = new \DateTime('tomorrow midnight');
+
         return $this->createQueryBuilder('c')
             ->select('SUM(c.montantTotal)')
-            ->where('DATE(c.dateCommande) = CURRENT_DATE()')
+            ->where('c.dateCommande >= :start AND c.dateCommande < :end')
             ->andWhere('c.statut IN (:statuts)')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->setParameter('statuts', ['valide', 'preparation', 'prete', 'termine'])
             ->getQuery()
             ->getSingleScalarResult() ?? 0;
@@ -102,8 +127,14 @@ class CommandeRepository extends ServiceEntityRepository
         }
 
         if ($date) {
-            $qb->andWhere('DATE(c.dateCommande) = DATE(:date)')
-               ->setParameter('date', $date);
+            $start = \DateTime::createFromInterface($date);
+            $start->setTime(0, 0, 0);
+            $end = clone $start;
+            $end->modify('+1 day');
+
+            $qb->andWhere('c.dateCommande >= :start AND c.dateCommande < :end')
+               ->setParameter('start', $start)
+               ->setParameter('end', $end);
         }
 
         if ($statut) {
