@@ -92,7 +92,7 @@ class CommandeRepository extends ServiceEntityRepository
             ->getSingleScalarResult() ?? 0;
     }
 
-    public function findByFilters(?string $type = null, ?\DateTimeInterface $date = null, ?string $statut = null, ?int $clientId = null): array
+    public function findByFilters(?string $type = null, ?\DateTimeInterface $date = null, ?string $statut = null, ?int $clientId = null, ?int $burgerId = null, ?int $menuId = null): array
     {
         $qb = $this->createQueryBuilder('c');
 
@@ -114,6 +114,18 @@ class CommandeRepository extends ServiceEntityRepository
         if ($clientId) {
             $qb->andWhere('c.client = :client')
                ->setParameter('client', $clientId);
+        }
+
+        if ($burgerId) {
+            $qb->innerJoin('c.commandeItems', 'cib')
+               ->andWhere('cib.burger = :burger')
+               ->setParameter('burger', $burgerId);
+        }
+
+        if ($menuId) {
+            $qb->innerJoin('c.commandeItems', 'cim')
+               ->andWhere('cim.menu = :menu')
+               ->setParameter('menu', $menuId);
         }
 
         return $qb->orderBy('c.dateCommande', 'DESC')

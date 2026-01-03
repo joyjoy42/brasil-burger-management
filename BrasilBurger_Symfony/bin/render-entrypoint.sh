@@ -4,7 +4,9 @@ set -eu
 DATABASE_URL_VALUE="${DATABASE_URL:-}"
 
 if echo "$DATABASE_URL_VALUE" | grep -qi "^postgres"; then
-  php bin/console doctrine:schema:update --force --env=prod --no-interaction || true
+  echo "Running database migrations..."
+  # php bin/console doctrine:schema:update --force --env=prod --no-interaction || true
+  echo "Migrations skipped (manual mode selected)."
 elif echo "$DATABASE_URL_VALUE" | grep -qi "^sqlite"; then
   DB_PATH="/var/www/html/var/BrasilBurger.db"
   SQL_PATH="/var/www/html/database.sql"
@@ -20,4 +22,5 @@ elif echo "$DATABASE_URL_VALUE" | grep -qi "^sqlite"; then
   fi
 fi
 
+echo "Starting web server..."
 exec php -S 0.0.0.0:${PORT:-10000} -t public

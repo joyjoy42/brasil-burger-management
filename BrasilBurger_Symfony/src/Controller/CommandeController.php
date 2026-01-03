@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Commande;
 use App\Form\CommandeFilterType;
+use App\Entity\Livreur;
 use App\Repository\CommandeRepository;
+use App\Repository\LivreurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +32,9 @@ class CommandeController extends AbstractController
                 $data['type'] ?? null,
                 $data['date'] ?? null,
                 $data['statut'] ?? null,
-                $data['client'] ?? null
+                $data['client'] ?? null,
+                $data['burger'] ?? null,
+                $data['menu'] ?? null
             );
         } else {
             $commandes = $commandeRepository->findBy([], ['dateCommande' => 'DESC']);
@@ -108,6 +112,24 @@ class CommandeController extends AbstractController
             $this->addFlash('success', 'Le statut de la commande a été mis à jour avec succès.');
         } else {
             $this->addFlash('error', 'Statut invalide.');
+        }
+
+        return $this->redirectToRoute('app_commande_show', ['id' => $commande->getId()]);
+    }
+    #[Route('/{id}/affecter-livreur', name: 'app_commande_affecter_livreur', methods: ['POST'])]
+    public function affecterLivreur(Request $request, Commande $commande, LivreurRepository $livreurRepository, EntityManagerInterface $entityManager): Response
+    {
+        $livreurId = $request->request->get('livreur_id');
+        $livreur = $livreurRepository->find($livreurId);
+
+        if ($livreur) {
+            $commande->setLivreur($livreur);
+            $commande->setStatut(Commande::STATUT_PRETE); // Or keeping current status? Usually assigned when ready.
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Livreur affecté avec succès.');
+        } else {
+            $this->addFlash('error', 'Livreur non trouvé.');
         }
 
         return $this->redirectToRoute('app_commande_show', ['id' => $commande->getId()]);

@@ -65,6 +65,15 @@ CREATE TABLE gestionnaire (
     password VARCHAR(255) NOT NULL
 );
 
+-- Table des livreurs
+CREATE TABLE livreur (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nom VARCHAR(255) NOT NULL,
+    prenom VARCHAR(255) NOT NULL,
+    telephone VARCHAR(255) NOT NULL,
+    disponible BOOLEAN DEFAULT TRUE
+);
+
 -- Table des commandes
 CREATE TABLE commande (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -74,8 +83,10 @@ CREATE TABLE commande (
     montant_total DECIMAL(10,2) NOT NULL,
     date_commande DATETIME NOT NULL,
     zone_livraison_id INTEGER,
+    livreur_id INTEGER,
     FOREIGN KEY (client_id) REFERENCES client(id) ON DELETE CASCADE,
-    FOREIGN KEY (zone_livraison_id) REFERENCES zone_livraison(id) ON DELETE SET NULL
+    FOREIGN KEY (zone_livraison_id) REFERENCES zone_livraison(id) ON DELETE SET NULL,
+    FOREIGN KEY (livreur_id) REFERENCES livreur(id) ON DELETE SET NULL
 );
 
 -- Table des items de commande

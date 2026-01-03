@@ -1,6 +1,4 @@
-databases:
-  - name: brasil-burger-db
-    plan: free
+
 
 services:
   - type: web
@@ -9,12 +7,10 @@ services:
     runtime: docker
     dockerContext: ./BrasilBurger_Symfony
     dockerfilePath: ./BrasilBurger_Symfony/Dockerfile
-    healthCheckPath: /login
+    healthCheckPath: /healthz
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: brasil-burger-db
-          property: connectionString
+        value: postgresql://neondb_owner:npg_Q28lkcThzxRG@ep-withered-surf-a4zfsqbd-pooler.us-east-1.aws.neon.tech:5432/neondb?sslmode=require
       - key: APP_SECRET
         generateValue: true
       - key: APP_ENV

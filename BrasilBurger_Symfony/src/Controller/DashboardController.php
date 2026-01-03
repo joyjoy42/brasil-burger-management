@@ -23,6 +23,7 @@ class DashboardController extends AbstractController
         $commandesAnnuleesDuJour = $commandeRepository->findCommandesAnnuleesDuJour();
         $recettesJournalieres = $commandeRepository->findRecettesJournalieres();
         $burgersPlusVendus = $commandeItemRepository->findBurgersLesPlusVendusDuJour();
+        $menusPlusVendus = $commandeItemRepository->findMenusLesPlusVendusDuJour();
 
         return $this->render('dashboard/index.html.twig', [
             'commandes_du_jour' => count($commandesDuJour),
@@ -31,6 +32,7 @@ class DashboardController extends AbstractController
             'commandes_annulees_du_jour' => count($commandesAnnuleesDuJour),
             'recettes_journalieres' => $recettesJournalieres,
             'burgers_plus_vendus' => $burgersPlusVendus,
+            'menus_plus_vendus' => $menusPlusVendus,
             'dernieres_commandes' => array_slice($commandesDuJour, 0, 5)
         ]);
     }

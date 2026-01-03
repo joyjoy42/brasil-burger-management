@@ -53,4 +53,19 @@ class CommandeItemRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findMenusLesPlusVendusDuJour(): array
+    {
+        return $this->createQueryBuilder('ci')
+            ->select('m.nom, SUM(ci.quantite) as totalVentes')
+            ->innerJoin('ci.menu', 'm')
+            ->innerJoin('ci.commande', 'c')
+            ->where('DATE(c.dateCommande) = CURRENT_DATE()')
+            ->andWhere('c.statut IN (:statuts)')
+            ->setParameter('statuts', ['valide', 'preparation', 'prete', 'termine'])
+            ->groupBy('m.id', 'm.nom')
+            ->orderBy('totalVentes', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

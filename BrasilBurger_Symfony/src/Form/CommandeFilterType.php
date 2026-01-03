@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Client;
+use App\Entity\Burger;
+use App\Entity\Menu;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -54,6 +56,22 @@ class CommandeFilterType extends AbstractType
                     return $client->getNom() . ' ' . $client->getPrenom();
                 },
                 'placeholder' => 'Tous les clients',
+                'attr' => ['class' => 'form-control']
+            ])
+            ->add('burger', EntityType::class, [
+                'label' => 'Contient Burger',
+                'required' => false,
+                'class' => Burger::class,
+                'choice_label' => 'nom',
+                'placeholder' => 'Tous les burgers',
+                'attr' => ['class' => 'form-control']
+            ])
+            ->add('menu', EntityType::class, [
+                'label' => 'Contient Menu',
+                'required' => false,
+                'class' => Menu::class,
+                'choice_label' => 'nom',
+                'placeholder' => 'Tous les menus',
                 'attr' => ['class' => 'form-control']
             ])
         ;

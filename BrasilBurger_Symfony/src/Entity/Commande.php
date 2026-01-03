@@ -51,6 +51,9 @@ class Commande
     #[ORM\ManyToOne(inversedBy: 'commandes')]
     private ?ZoneLivraison $zoneLivraison = null;
 
+    #[ORM\ManyToOne(inversedBy: 'commandes')]
+    private ?Livreur $livreur = null;
+
     public function __construct()
     {
         $this->commandeItems = new ArrayCollection();
@@ -182,6 +185,18 @@ class Commande
     public function setZoneLivraison(?ZoneLivraison $zoneLivraison): static
     {
         $this->zoneLivraison = $zoneLivraison;
+
+        return $this;
+    }
+
+    public function getLivreur(): ?Livreur
+    {
+        return $this->livreur;
+    }
+
+    public function setLivreur(?Livreur $livreur): static
+    {
+        $this->livreur = $livreur;
 
         return $this;
     }
