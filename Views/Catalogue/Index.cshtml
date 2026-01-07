@@ -1,164 +1,98 @@
 @model BrasilBurger.Web.Models.ViewModels.CatalogueViewModel
-@using BrasilBurger.Web.Models.ViewModels
-@using System.Web
+
 @{
     ViewData["Title"] = "Catalogue";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-}
-
-<div class="container mt-4">
-    <!-- Search Bar -->
-    <div class="search-bar mb-4">
-        <form method="get" action="" class="d-flex align-items-center">
-            <i class="fas fa-search"></i>
-            <input type="text" name="search" value="@Model.SearchTerm" placeholder="Search dishes, restaurants" class="flex-grow-1" />
-            <input type="hidden" name="filtre" value="@Model.FiltreType?.ToString().ToLower()" />
-        </form>
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-primary">Notre Menu</h1>
+        <p class="lead">Découvrez nos délicieux burgers, nos menus complets et nos accompagnements.</p>
     </div>
 
-    <!-- Filter Buttons -->
-    <div class="mb-4">
-        <div class="btn-group" role="group">
-            <a href="?filtre=all" class="btn @(Model.FiltreType == FilterType.All || Model.FiltreType == null ? "btn-primary" : "btn-outline-primary")">Tous</a>
-            <a href="?filtre=burger" class="btn @(Model.FiltreType == FilterType.Burger ? "btn-primary" : "btn-outline-primary")">Burgers</a>
-            <a href="?filtre=menu" class="btn @(Model.FiltreType == FilterType.Menu ? "btn-primary" : "btn-outline-primary")">Menus</a>
-        </div>
-    </div>
-
-    <!-- Category Section -->
-    <div class="category-section">
-        <div class="section-title">
-            <h3>Menu</h3>
-            <a href="?filtre=all"><small>See All ></small></a>
-        </div>
-        <div class="category-list">
-            <div class="category-item @(Model.FiltreType == FilterType.All || Model.FiltreType == null ? "active" : "")">
-                <img src="https://res.cloudinary.com/dbkji1d1j/image/upload/brasil-burger/category-all.png" alt="All" onerror="this.src='https://via.placeholder.com/80?text=All'" />
-                <span>Tous</span>
-            </div>
-            <div class="category-item @(Model.FiltreType == FilterType.Burger ? "active" : "")">
-                <img src="https://res.cloudinary.com/dbkji1d1j/image/upload/brasil-burger/category-burger.png" alt="Burgers" onerror="this.src='https://via.placeholder.com/80?text=Burger'" />
-                <span>Burgers</span>
-            </div>
-            <div class="category-item @(Model.FiltreType == FilterType.Menu ? "active" : "")">
-                <img src="https://res.cloudinary.com/dbkji1d1j/image/upload/brasil-burger/category-menu.png" alt="Menus" onerror="this.src='https://via.placeholder.com/80?text=Menu'" />
-                <span>Menus</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Our Best Sellers / Products -->
-    <div class="section-title mt-5">
-        <h3>Our Best Sellers</h3>
-        <a href="?filtre=all"><small>See All ></small></a>
-    </div>
-
-    <!-- Burgers -->
-    @if (Model.FiltreType == FilterType.All || Model.FiltreType == FilterType.Burger || Model.FiltreType == null)
-    {
-        @if (Model.Burgers?.Any() == true)
-        {
-            <div class="product-grid">
-                @foreach (var burger in Model.Burgers)
-                {
-                    <div class="food-card">
-                        <a href="/Catalogue/DetailsBurger/@burger.Id" style="text-decoration: none; color: inherit;">
-                            @{
-                                var burgerImageUrl = BrasilBurger.Web.Helpers.ImageHelper.GetImageUrl(burger.Image, "/images/default-burger.png", burger.Nom);
-                                var burgerPlaceholder = $"https://via.placeholder.com/300x200/FF6B35/FFFFFF?text={HttpUtility.UrlEncode(burger.Nom)}";
-                            }
-                            <img src="@burgerImageUrl" style="width: 100%; max-height: 400px; object-fit: cover;" alt="@burger.Nom" onerror="this.onerror=null; this.src='/images/default-burger.png';" />
-                            <div class="food-card-body">
-                                <h5 class="food-card-title">@burger.Nom</h5>
-                                <p class="text-muted mb-2" style="font-size: 0.9rem;">@(burger.Description ?? "Burger délicieux")</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="food-card-price">@burger.Prix.ToString("N0") FCFA</span>
-                                    <span class="badge badge-warning">
-                                        <i class="fas fa-star"></i> 4.7
-                                    </span>
-                                </div>
+    <!-- Menus Section -->
+    <div class="mb-5">
+        <h2 class="h3 mb-4 border-bottom pb-2">Nos Menus</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var menu in Model.Menus)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm hover-shadow transition">
+                        <img src="@(string.IsNullOrEmpty(menu.Image) ? "/images/placeholder-menu.jpg" : menu.Image)" class="card-img-top" alt="@menu.Nom" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">@menu.Nom</h5>
+                            <p class="card-text text-muted">A partir de @menu.Prix.ToString("C")</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a asp-action="DetailsMenu" asp-route-id="@menu.Id" class="btn btn-outline-primary btn-sm">Détails</a>
+                                <form asp-controller="Commande" asp-action="AjouterAuPanier" method="post">
+                                    <input type="hidden" name="id" value="@menu.Id" />
+                                    <input type="hidden" name="type" value="menu" />
+                                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3">Ajouter au panier</button>
+                                </form>
                             </div>
-                        </a>
+                        </div>
                     </div>
-                }
-            </div>
-        }
-        else if (!string.IsNullOrEmpty(Model.SearchTerm))
-        {
-            <p class="text-center text-muted py-5">Aucun burger trouvé pour "@Model.SearchTerm".</p>
-        }
-    }
+                </div>
+            }
+        </div>
+    </div>
 
-    <!-- Menus -->
-    @if (Model.FiltreType == FilterType.All || Model.FiltreType == FilterType.Menu || Model.FiltreType == null)
-    {
-        @if (Model.Menus?.Any() == true)
-        {
-            <div class="product-grid">
-                @foreach (var menu in Model.Menus)
-                {
-                    <div class="food-card">
-                        <a href="/Catalogue/DetailsMenu/@menu.Id" style="text-decoration: none; color: inherit;">
-                            @{
-                                var menuImageUrl = BrasilBurger.Web.Helpers.ImageHelper.GetImageUrl(menu.Image, "/images/default-menu.png", menu.Nom);
-                                var menuPlaceholder = $"https://via.placeholder.com/300x200/FF6B35/FFFFFF?text={HttpUtility.UrlEncode(menu.Nom)}";
-                            }
-                                <img src="@menuImageUrl" style="width: 100%; max-height: 400px; object-fit: cover;" alt="@menu.Nom" onerror="this.onerror=null; this.src='/images/default-menu.png';" />
-                            <div class="food-card-body">
-                                <h5 class="food-card-title">@menu.Nom</h5>
-                                <p class="text-muted mb-2" style="font-size: 0.9rem;">@(menu.Description ?? "Menu complet")</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="food-card-price">@menu.Prix.ToString("N0") FCFA</span>
-                                    <span class="badge badge-warning">
-                                        <i class="fas fa-star"></i> 4.8
-                                    </span>
-                                </div>
-                            </div>
-                        </a>
+    <!-- Burgers Section -->
+    <div class="mb-5">
+        <h2 class="h3 mb-4 border-bottom pb-2">Nos Burgers</h2>
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+            @foreach (var burger in Model.Burgers)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 bg-light">
+                        <img src="@(string.IsNullOrEmpty(burger.Image) ? "/images/placeholder-burger.jpg" : burger.Image)" class="card-img-top rounded-top" alt="@burger.Nom" style="height: 150px; object-fit: cover;">
+                        <div class="card-body">
+                            <h6 class="card-title fw-bold">@burger.Nom</h6>
+                            <p class="text-primary fw-bold">@burger.Prix.ToString("C")</p>
+                            <form asp-controller="Commande" asp-action="AjouterAuPanier" method="post">
+                                <input type="hidden" name="id" value="@burger.Id" />
+                                <input type="hidden" name="type" value="burger" />
+                                <button type="submit" class="btn btn-dark btn-sm w-100">Ajouter au panier</button>
+                            </form>
+                        </div>
                     </div>
-                }
-            </div>
-        }
-        else if (!string.IsNullOrEmpty(Model.SearchTerm))
-        {
-            <p class="text-center text-muted py-5">Aucun menu trouvé pour "@Model.SearchTerm".</p>
-        }
-    }
+                </div>
+            }
+        </div>
+    </div>
 
-    @if ((Model.Burgers?.Any() != true && Model.Menus?.Any() != true) && string.IsNullOrEmpty(Model.SearchTerm))
-    {
-        <p class="text-center text-muted py-5">Aucun produit disponible pour le moment.</p>
-    }
+    <!-- Complements Section -->
+    <div class="mb-5">
+        <h2 class="h3 mb-4 border-bottom pb-2">Accompagnements & Boissons</h2>
+        <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-3">
+            @foreach (var complement in Model.Complements)
+            {
+                <div class="col">
+                    <div class="text-center p-3 border rounded-3 bg-white h-100 shadow-xs">
+                        <img src="@(string.IsNullOrEmpty(complement.Image) ? "/images/placeholder-complement.jpg" : complement.Image)" class="img-fluid rounded mb-2" alt="@complement.Nom" style="height: 80px; object-fit: contain;">
+                        <div class="small fw-bold">@complement.Nom</div>
+                        <div class="small text-muted">@complement.Prix.ToString("C")</div>
+                        <form asp-controller="Commande" asp-action="AjouterAuPanier" method="post">
+                            <input type="hidden" name="id" value="@complement.Id" />
+                            <input type="hidden" name="type" value="complement" />
+                            <button type="submit" class="btn btn-link btn-sm text-primary p-0">Ajouter</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>
 
-@section Scripts {
-    <script>
-        // Auto-submit search on enter
-        document.querySelector('.search-bar input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                this.closest('form').submit();
-            }
-        });
-
-        // Category click handler
-        document.querySelectorAll('.category-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const text = this.querySelector('span').textContent.trim().toLowerCase();
-                let filter = 'all';
-                if (text === 'burgers') filter = 'burger';
-                if (text === 'menus') filter = 'menu';
-                window.location.href = '?filtre=' + filter;
-            });
-        });
-    </script>
-}
+<style>
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    .transition {
+        transition: all 0.3s ease;
+    }
+    .shadow-xs {
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+</style>

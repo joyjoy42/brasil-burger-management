@@ -1,45 +1,64 @@
 @{
     ViewData["Title"] = "Accueil";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link rel="stylesheet" href="~/css/home.css" />
-
-<div class="splash-screen">
-    <div class="logo-container">
-        <img src="https://res.cloudinary.com/dbkji1d1j/image/upload/v1766285347/logo_afb1ql.jpg" alt="Brasil Burger Logo" onerror="this.style.display='none'; document.querySelector('.logo-text').style.display='block';">
-        <div class="logo-text" style="display: none;">BRAZIL BURGER</div>
-    </div>
-
-    <div class="welcome-section">
-        <h2>Bienvenue chez Brazil Burger</h2>
-        <p>
-            Découvrez nos burgers gourmands, préparés avec des ingrédients frais et de qualité. 
-            Commandez en ligne et profitez d'une livraison rapide ou venez les déguster sur place !
-        </p>
-
-        <div class="action-buttons">
-            @if (User.Identity.IsAuthenticated)
-            {
-                <a asp-controller="Catalogue" asp-action="Index" class="btn btn-home btn-home-primary">
-                    <i class="fas fa-utensils"></i> Voir le Catalogue
-                </a>
-                <a asp-controller="Commande" asp-action="Panier" class="btn btn-home btn-home-outline">
-                    <i class="fas fa-shopping-cart"></i> Mon Panier
-                </a>
-            }
-            else
-            {
-                <a asp-controller="Catalogue" asp-action="Index" class="btn btn-home btn-home-primary">
-                    <i class="fas fa-utensils"></i> Voir le Catalogue
-                </a>
-                <a asp-controller="Account" asp-action="Login" class="btn btn-home btn-home-outline">
-                    <i class="fas fa-sign-in-alt"></i> Se Connecter
-                </a>
-                <a asp-controller="Account" asp-action="Register" class="btn btn-home btn-home-outline">
-                    <i class="fas fa-user-plus"></i> S'inscrire
-                </a>
-            }
+<div class="hero-section text-white d-flex align-items-center" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1550547660-d9450f859349?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); height: 80vh; background-size: cover; background-position: center;">
+    <div class="container text-center">
+        <h1 class="display-1 fw-bold mb-4">Brasil Burger</h1>
+        <p class="lead fs-3 mb-5">Le goût authentique du Brésil dans votre assiette.</p>
+        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+            <a asp-controller="Catalogue" asp-action="Index" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold">Commander Maintenant</a>
+            <a href="#about" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-bold">En Savoir Plus</a>
         </div>
     </div>
 </div>
+
+<section id="features" class="py-5 bg-light">
+    <div class="container py-5">
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+                    <div class="feature-icon bg-primary text-white rounded-circle mb-4 d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <i class="bi bi-star-fill fs-2"></i>
+                    </div>
+                    <h3 class="fw-bold">Qualité Premium</h3>
+                    <p class="text-muted">Des ingrédients frais et sélectionnés avec soin pour un goût exceptionnel.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+                    <div class="feature-icon bg-success text-white rounded-circle mb-4 d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <i class="bi bi-truck fs-2"></i>
+                    </div>
+                    <h3 class="fw-bold">Livraison Rapide</h3>
+                    <p class="text-muted">Recevez votre commande en moins de 30 minutes, toute chaude à votre porte.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+                    <div class="feature-icon bg-warning text-white rounded-circle mb-4 d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <i class="bi bi-heart-fill fs-2"></i>
+                    </div>
+                    <h3 class="fw-bold">Fait avec Amour</h3>
+                    <p class="text-muted">Nos chefs passionnés mettent tout leur savoir-faire dans chaque burger.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .btn-primary {
+        background-color: #ffc107;
+        border-color: #ffc107;
+        color: #000;
+    }
+    .btn-primary:hover {
+        background-color: #e0a800;
+        border-color: #e0a800;
+        color: #000;
+    }
+    .text-primary {
+        color: #ffc107 !important;
+    }
+</style>
