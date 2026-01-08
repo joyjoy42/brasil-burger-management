@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des produits - Burger Manager{% endblock %}
+
+{% block body %}
+<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px;">
+    <div class="page-header" style="margin-bottom: 0;">
+        <h1>Gestion des produits</h1>
+        <p>Gérez vos burgers, menus et compléments</p>
+    </div>
+    <a href="{{ path('manager_product_new') }}" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+        Ajouter un produit
+    </a>
+</div>
+
+<div class="card" style="margin-bottom: 24px;">
+    <form method="get" style="display: flex; gap: 16px; align-items: center;">
+        <div style="flex: 1; position: relative;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: #9CA3AF;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            <input type="text" name="search" value="{{ filters.search }}" placeholder="Rechercher un produit..." style="width: 100%; padding: 10px 10px 10px 40px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 14px;">
+        </div>
+
+        <select name="type" style="padding: 10px 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 14px; background-color: white; min-width: 150px;">
+            <option value="all">Tous les types</option>
+            <option value="BURGER" {% if filters.type == 'BURGER' %}selected{% endif %}>Burger</option>
+            <option value="MENU" {% if filters.type == 'MENU' %}selected{% endif %}>Menu</option>
+            <option value="COMPLEMENT" {% if filters.type == 'COMPLEMENT' %}selected{% endif %}>Complément</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary" style="padding: 10px 20px;">Filtrer</button>
+    </form>
+</div>
+
+<div class="card" style="padding: 0; overflow: hidden;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Prix</th>
+                <th style="text-align: right;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {# Menus first as in the screenshot example #}
+            {% for menu in menus %}
+            <tr>
+                <td>
+                    {% if menu.image %}
+                        <img src="{{ menu.image }}" alt="{{ menu.nom }}" style="width: 40px; height: 40px; border-radius: 4px; object-fit: cover; background-color: #F3F4F6;">
+                    {% else %}
+                        <div style="width: 40px; height: 40px; border-radius: 4px; background-color: #F3F4F6; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #9CA3AF;">No img</div>
+                    {% endif %}
+                </td>
+                <td style="font-weight: 500;">{{ menu.nom }}</td>
+                <td>
+                    <span class="badge" style="background-color: #DBEAFE; color: #1E40AF;">Menu</span>
+                </td>
+                <td style="color: #6B7280; font-size: 13px;">Burger + Frites + Boisson</td>
+                <td style="font-weight: 600;">{{ (menu.id * 5 + 10)|number_format(0, ',', ' ') }} FCFA</td> {# Placeholder price for menu #}
+                <td style="text-align: right;">
+                    <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                        <a href="#" style="color: #3B82F6;">
+                            <svg xmlns="http://www.w3.org/2000/svg" style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                        </a>
+                        <a href="#" style="color: #EF4444;">
+                            <svg xmlns="http://www.w3.org/2000/svg" style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+
+            {% for product in products %}
+            <tr>
+                <td>
+                    {% if product.image %}
+                        <img src="{{ product.image }}" alt="{{ product.nom }}" style="width: 40px; height: 40px; border-radius: 4px; object-fit: cover; background-color: #F3F4F6;">
+                    {% else %}
+                        <div style="width: 40px; height: 40px; border-radius: 4px; background-color: #F3F4F6; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #9CA3AF;">No img</div>
+                    {% endif %}
+                </td>
+                <td style="font-weight: 500;">{{ product.nom }}</td>
+                <td>
+                    {% if product.type == 'BURGER' %}
+                        <span class="badge" style="background-color: #FFEDD5; color: #9A3412;">Burger</span>
+                    {% else %}
+                        <span class="badge" style="background-color: #F3F4F6; color: #4B5563;">Complément</span>
+                    {% endif %}
+                </td>
+                <td style="color: #6B7280; font-size: 13px;">
+                    {% if product.type == 'BURGER' %}Le burger classique{% else %}Accompagnement savoureux{% endif %}
+                </td>
+                <td style="font-weight: 600;">{{ product.prix|number_format(0, ',', ' ') }} FCFA</td>
+                <td style="text-align: right;">
+                    <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                        <a href="{{ path('manager_product_edit', {id: product.id}) }}" style="color: #3B82F6;">
+                            <svg xmlns="http://www.w3.org/2000/svg" style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                        </a>
+                        <a href="{{ path('manager_product_delete', {id: product.id}) }}" style="color: #EF4444;" onclick="return confirm('Êtes-vous sûr de vouloir archiver ce produit ?')">
+                            <svg xmlns="http://www.w3.org/2000/svg" style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+
+            {% if products is empty and menus is empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 40px; color: #6B7280;">Aucun produit trouvé</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
