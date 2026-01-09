@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }} - Burger Manager{% endblock %}
+
+{% block body %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div class="page-header">
+        <a href="{{ path('manager_products') }}" style="display: inline-flex; align-items: center; gap: 8px; color: #6B7280; text-decoration: none; font-size: 14px; margin-bottom: 16px;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+            Retour aux produits
+        </a>
+        <h1>{{ title }}</h1>
+    </div>
+
+    <div class="card">
+        {{ form_start(form) }}
+            <div style="display: flex; flex-direction: column; gap: 32px;">
+                <div>
+                    {{ form_label(form.nom, null, {'label_attr': {'style': 'display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 8px;'}}) }}
+                    {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'style': 'padding-left: 12px;'}}) }}
+                    {{ form_errors(form.nom) }}
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr; gap: 24px;">
+                    <div>
+                        <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #111827;">1. Choisir le burger principal</h3>
+                        {{ form_widget(form.burger, {'attr': {'class': 'form-control', 'style': 'padding-left: 12px; height: 45px;'}}) }}
+                        {{ form_errors(form.burger) }}
+                    </div>
+
+                    <div>
+                        <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #111827;">2. Sélectionner les compléments</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; background: #F9FAFB; padding: 20px; border-radius: 8px;">
+                            {{ form_widget(form.complements) }}
+                        </div>
+                        {{ form_errors(form.complements) }}
+                    </div>
+                </div>
+
+                <div>
+                    {{ form_label(form.image, null, {'label_attr': {'style': 'display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 8px;'}}) }}
+                    <div style="display: flex; gap: 16px; align-items: flex-start;">
+                        {% if menu is defined and menu.image %}
+                            <img src="{{ menu.image }}" alt="Preview" style="width: 80px; height: 80px; border-radius: 8px; object-fit: cover; border: 1px solid #E5E7EB;">
+                        {% endif %}
+                        <div style="flex: 1;">
+                            {{ form_widget(form.image, {'attr': {'class': 'form-control', 'style': 'padding-left: 12px; padding: 8px;'}}) }}
+                            <p style="font-size: 12px; color: #6B7280; margin-top: 4px;">Laissez vide pour conserver l'image actuelle.</p>
+                        </div>
+                    </div>
+                    {{ form_errors(form.image) }}
+                </div>
+
+                <div style="padding-top: 16px; border-top: 1px solid #E5E7EB; display: flex; justify-content: flex-end; gap: 12px;">
+                    <a href="{{ path('manager_products') }}" class="btn" style="background-color: #F3F4F6; color: #4B5563;">Annuler</a>
+                    <button type="submit" class="btn btn-primary">Créer le Menu</button>
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

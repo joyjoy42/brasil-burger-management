@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des livraisons - Burger Manager{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <h1>Gestion des livraisons</h1>
+    <p>Suivez et gérez les livraisons par zone et par livreur</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon" style="background-color: #3B82F6;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+            </div>
+        </div>
+        <div class="stat-value">{{ inProgress }}</div>
+        <div class="stat-label">En cours</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon" style="background-color: #10B981;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+        </div>
+        <div class="stat-value">{{ delivered }}</div>
+        <div class="stat-label">Livrées</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon" style="background-color: #FF5A00;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            </div>
+        </div>
+        <div class="stat-value">{{ zoneCount }}</div>
+        <div class="stat-label">Zones actives</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon" style="background-color: #8B5CF6;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+            </div>
+        </div>
+        <div class="stat-value">{{ livreurCount }}</div>
+        <div class="stat-label">Livreurs</div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+    <div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; color: #FF5A00;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            <h3 style="margin: 0; font-size: 18px; color: #111827;">Livraisons par zone</h3>
+        </div>
+
+        {% for stat in zoneStats %}
+        <div class="card" style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span style="font-weight: 600; font-size: 16px;">{{ stat.zone.nom }}</span>
+                <span class="badge" style="background-color: #DBEAFE; color: #1E40AF;">{{ stat.activeCount }} en cours</span>
+            </div>
+            <p style="font-size: 13px; color: #6B7280; margin-bottom: 12px;">Total: {{ stat.activeCount }} livraison(s)</p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                {% for order in stat.orders %}
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+                    <span style="color: #3B82F6;">●</span>
+                    <span>#{{ "%03d"|format(order.id) }} - {{ order.client.prenom }} {{ order.client.nom }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; color: #FF5A00;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+            <h3 style="margin: 0; font-size: 18px; color: #111827;">Livraisons par livreur</h3>
+        </div>
+
+        {% for stat in livreurStats %}
+        <div class="card" style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #FFEDD5; color: #9A3412; display: flex; align-items: center; justify-content: center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 16px;">{{ stat.livreur.prenom }} {{ stat.livreur.nom }}</div>
+                        <div style="font-size: 12px; color: #6B7280;">{{ stat.totalDeliveries }} livraison(s) en cours</div>
+                    </div>
+                </div>
+                <span class="badge" style="background-color: #F3F4F6; color: #4B5563;">{{ stat.totalDeliveries }} total</span>
+            </div>
+
+            {% if stat.currentDelivery %}
+            <div style="background-color: #F9FAFB; border-radius: 8px; padding: 12px; font-size: 13px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" style="width: 14px; height: 14px; color: #9CA3AF;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>15 Rue de la Paix</span>
+                    </div>
+                    <span class="badge" style="background-color: #D1FAE5; color: #065F46;">En cours</span>
+                </div>
+                <div style="color: #6B7280;">Zone Sud • ETA: 12:00</div>
+            </div>
+            {% else %}
+            <div style="color: #6B7280; font-size: 13px; text-align: center; padding: 12px; border: 1px dashed #E5E7EB; border-radius: 8px;">
+                Aucune livraison en cours
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

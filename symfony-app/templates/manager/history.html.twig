@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique des ventes - Burger Manager{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <h1>Historique et Tendances</h1>
+    <p>Analysez l'évolution de vos ventes et recettes</p>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px;">
+    {# Weekly Trend Chart Placeholder #}
+    <div class="card">
+        <h3 style="margin-top: 0; margin-bottom: 24px; font-size: 18px; color: #111827;">Recettes des 7 derniers jours</h3>
+        <div style="height: 300px; display: flex; align-items: flex-end; gap: 12px; padding-bottom: 20px;">
+            {% set max_revenue = 0 %}
+            {% for data in weeklyRevenue %}
+                {% if data.revenue > max_revenue %}{% set max_revenue = data.revenue %}{% endif %}
+            {% endfor %}
+            {% if max_revenue == 0 %}{% set max_revenue = 100 %}{% endif %}
+
+            {% for data in weeklyRevenue %}
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                    <div style="width: 100%; background-color: #FFEDD5; border-radius: 4px; position: relative; height: {{ (data.revenue / max_revenue * 200)|round }}px; transition: height 0.3s ease;">
+                        <div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 600; color: #9A3412;">
+                            {{ data.revenue|number_format(0) }} FCFA
+                        </div>
+                    </div>
+                    <span style="font-size: 12px; color: #6B7280;">{{ data.day }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# Monthly Trend Chart Placeholder #}
+    <div class="card">
+        <h3 style="margin-top: 0; margin-bottom: 24px; font-size: 18px; color: #111827;">Recettes des 6 derniers mois</h3>
+        <div style="height: 300px; display: flex; align-items: flex-end; gap: 12px; padding-bottom: 20px;">
+            {% set max_month_revenue = 0 %}
+            {% for data in monthlyRevenue %}
+                {% if data.revenue > max_month_revenue %}{% set max_month_revenue = data.revenue %}{% endif %}
+            {% endfor %}
+            {% if max_month_revenue == 0 %}{% set max_month_revenue = 1000 %}{% endif %}
+
+            {% for data in monthlyRevenue %}
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                    <div style="width: 100%; background-color: #DBEAFE; border-radius: 4px; position: relative; height: {{ (data.revenue / max_month_revenue * 200)|round }}px; transition: height 0.3s ease;">
+                        <div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 600; color: #1E40AF;">
+                            {{ data.revenue|number_format(0) }} FCFA
+                        </div>
+                    </div>
+                    <span style="font-size: 12px; color: #6B7280;">{{ data.month }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-top: 0; margin-bottom: 24px; font-size: 18px; color: #111827;">Détails des recettes par période</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Période</th>
+                <th>Type</th>
+                <th style="text-align: right;">Recette Total</th>
+                <th style="text-align: right;">Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="font-weight: 500;">Aujourd'hui</td>
+                <td>Journalier</td>
+                <td style="text-align: right; font-weight: 600;">{{ weeklyRevenue|last.revenue|number_format(2) }} FCFA</td>
+                <td style="text-align: right;"><span class="badge" style="background-color: #D1FAE5; color: #065F46;">Actif</span></td>
+            </tr>
+            <tr>
+                <td style="font-weight: 500;">Semaine en cours</td>
+                <td>Hebdomadaire</td>
+                <td style="text-align: right; font-weight: 600;">
+                    {% set week_total = 0 %}
+                    {% for data in weeklyRevenue %}{% set week_total = week_total + data.revenue %}{% endfor %}
+                    {{ week_total|number_format(2) }} FCFA
+                </td>
+                <td style="text-align: right;"><span class="badge" style="background-color: #D1FAE5; color: #065F46;">Actif</span></td>
+            </tr>
+            <tr>
+                <td style="font-weight: 500;">Mois en cours</td>
+                <td>Mensuel</td>
+                <td style="text-align: right; font-weight: 600;">{{ monthlyRevenue|last.revenue|number_format(2) }} FCFA</td>
+                <td style="text-align: right;"><span class="badge" style="background-color: #D1FAE5; color: #065F46;">Actif</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
