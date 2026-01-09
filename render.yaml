@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: brasil-burger-csharp
+    runtime: docker
+    plan: free
+    region: frankfurt
+    # We use Docker for C# to ensure environment consistency on Render
+    envVars:
+      - key: ConnectionStrings__DefaultConnection
+        sync: false # Set in Render Dashboard (Neon DB)
+      - key: Cloudinary__Url
+        sync: false # Set in Render Dashboard
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+    healthCheckPath: /

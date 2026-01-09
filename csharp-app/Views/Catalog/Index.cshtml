@@ -1,0 +1,63 @@
+@using BrasilBurgerClient.Models
+@{
+    ViewData["Title"] = "Catalogue";
+    var burgers = ViewBag.Burgers as List<Product>;
+    var menus = ViewBag.Menus as List<Menu>;
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Notre Carte</h1>
+
+    <h3>Burgers</h3>
+    <div class="row">
+        @if (burgers != null && burgers.Any())
+        {
+            @foreach (var b in burgers)
+            {
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            @if (!string.IsNullOrEmpty(b.Image)) { <img src="@b.Image" class="card-img-top" alt="@b.Nom"> }
+                            else { <i class="bi bi-egg-fried fs-1 text-secondary"></i> }
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">@b.Nom</h5>
+                            <p class="card-text text-primary fw-bold">@b.Prix FCFA</p>
+                            <button class="btn btn-primary btn-sm w-100 rounded-pill">Ajouter au panier</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Aucun burger disponible pour le moment.</p>
+        }
+    </div>
+
+    <h3 class="mt-5">Menus</h3>
+    <div class="row">
+        @if (menus != null && menus.Any())
+        {
+            @foreach (var m in menus)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm border-0 overflow-hidden">
+                         <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                            @if (!string.IsNullOrEmpty(m.Image)) { <img src="@m.Image" class="card-img-top" alt="@m.Nom"> }
+                            else { <i class="bi bi-box-seam fs-1 text-secondary"></i> }
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">@m.Nom</h5>
+                            <button class="btn btn-success btn-sm w-100 rounded-pill">Commander le menu</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Aucun menu disponible pour le moment.</p>
+        }
+    </div>
+</div>

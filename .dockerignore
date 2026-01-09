@@ -1,0 +1,11 @@
+**/.git
+**/.vscode
+**/.idea
+**/bin
+**/obj
+**/out
+**/node_modules
+.env
+.env.*
+Dockerfile
+render.yaml
