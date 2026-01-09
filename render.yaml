@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: brasil-burger-symfony
+    runtime: php
+    plan: free
+    region: frankfurt
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      php bin/console cache:clear
+      php bin/console assets:install public
+    startCommand: heroku-php-apache2 public/
+    envVars:
+      - key: APP_ENV
+        value: prod
+      - key: APP_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false # Set this in Render Dashboard
+      - key: CLOUDINARY_URL
+        sync: false # Set this in Render Dashboard
+      - key: DATABASE_URL_NEON
+        fromDatabase:
+          name: neon-db # Or just use the URL directly from Neon
+          property: connectionString
+    # Example of persistent disk if needed, but we use Cloudinary
+    # disks:
+    #   - name: uploads
+    #     mountPath: /var/www/html/public/uploads
+    #     sizeGB: 1
